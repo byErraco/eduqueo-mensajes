@@ -1,6 +1,7 @@
 
 const axios = require("axios");
 const Sesion = require("../app/models/sesion.model");
+const { parentPort } = require('worker_threads');
 
 (async () => {
     var present_date = new Date();
@@ -9,19 +10,24 @@ const Sesion = require("../app/models/sesion.model");
         console.log(err)
       } else {
           for (let value of data) {
-            console.log(value.fecha_ultima_interaccion)
+
             var Difference_In_Time = present_date.getTime() - value.fecha_ultima_interaccion.getTime();
+            console.log(Difference_In_Time)
             var Difference_In_Days = Difference_In_Time / (1000 * 3600 * 24);
             // console.log(value);
             // console.log(Difference_In_Days);
             if (Difference_In_Days > 30 && Difference_In_Days < 60) {
               console.log('send message!')
+              parentPort.postMessage('done');
                 //post to tasker
                 // const article = { title: 'Axios POST Request Example' };
                 // axios.post('https://reqres.in/api/articles', article)
                 // .then(response => console.log(response.data));
+            } else {
+              console.log('dont send anything!')
             }
           }
+          parentPort.postMessage('done');
       }
     });
 })();

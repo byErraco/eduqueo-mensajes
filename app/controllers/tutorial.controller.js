@@ -38,6 +38,112 @@ const createRecord = async (fields) => {
 
 
 // Crear y guardar nueva sesion
+exports.saveMsg = async (req, res) => {
+  // Validate request
+  if (!req.body) {
+    res.status(400).send({
+      message: "Content can not be empty!"
+    });
+  }
+  console.log(req.body)
+  const {nombre_contacto} = req.body
+
+  var now = new Date();
+  var utc = new Date(now.getTime() + now.getTimezoneOffset() * 60000);
+
+  Sesion.getContactByName(nombre_contacto, async (err, contact) => {
+    if (err) {
+      console.log(err)
+    }
+    if(contact == 'no existe') {
+      console.log('No existe bro, creando...')
+
+      const nuevoContacto = new Sesion({
+        fecha_primera_interaccion: utc,
+        fecha_ultima_interaccion: utc,
+        fecha_ultimo_mensaje_masivo_enviado: utc,
+        nombre: nombre_contacto,
+        es_cliente: req.body.es_cliente || false,
+        cantidad_interacciones: 1
+      });
+        // Save Contact in the database
+      Sesion.createContact(nuevoContacto, async (err, contactoCreado) => {
+        if (err)
+          res.status(500).send({
+            message:
+              err.message || "Some error occurred while creating the contact."
+          });
+        else {
+          console.log('Nuevo contacto!')
+          console.log(contactoCreado)
+          console.log('Saving mensaje!')
+          const newMsg = {
+            id_celular: req.body.asesor_id,
+            mensaje: req.body.mensaje,
+            id_contacto: contactoCreado.id,
+            fecha:utc
+          };
+          Sesion.createMensaje(newMsg, async (err, mensajeCreado) => {
+            if (err)
+              res.status(500).send({
+                message:
+                  err.message || "Some error occurred while saving the msg."
+              });
+            else {
+              console.log('Nuevo Msg!')
+              console.log(mensajeCreado)
+              res.send('Mensaje Creado!')
+            }
+          });
+        }
+      });
+    } else {
+      console.log('vamos a updatear a')
+      console.log(contact[0])
+      const updateContacto = new Sesion({
+        fecha_ultima_interaccion: utc,
+        cantidad_interacciones: 1
+      });
+      //update contact in the db (amount of interactions and last date of interaction)
+      Sesion.updateContactInteraction(contact[0].id,updateContacto, async (err, contactoUpdateado) => {
+        if (err)
+          res.status(500).send({
+            message:
+              err.message || "Some error occurred while updating the contact."
+          });
+        else {
+          console.log('Contacto updateado!')
+          console.log('Saving mensaje!')
+          const newMsg = {
+            id_celular: req.body.asesor_id,
+            mensaje: req.body.mensaje,
+            id_contacto: contact[0].id,
+            fecha:utc
+          };
+          Sesion.createMensaje(newMsg, async (err, mensajeCreado) => {
+            if (err)
+              res.status(500).send({
+                message:
+                  err.message || "Some error occurred while saving the msg."
+              });
+            else {
+              console.log('Nuevo Msg!')
+              console.log(mensajeCreado)
+              res.send('Mensaje Creado!')
+            }
+          });
+        }
+      });
+
+    } 
+      
+    
+  });
+
+
+
+};
+// Crear y guardar nueva sesion
 exports.create = async (req, res) => {
   // Validate request
   if (!req.body) {

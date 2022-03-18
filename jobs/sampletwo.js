@@ -2,6 +2,8 @@
 const axios = require("axios");
 const Sesion = require("../app/models/sesion.model");
 const Airtable = require('airtable');
+const { parentPort } = require('worker_threads');
+
 const base = new Airtable({ apiKey: 'keyaSZubvuicnMRyO' }).base(
   // 'appqvc1jKHBIRRbSy'
   'app5VPWEzWCR4bUbe'
@@ -31,7 +33,6 @@ const getRecordByField = async (field, result) => {
       filterByFormula: `{nombre_unico} = "${field}"`
   }).firstPage(function(err,records) {
       if(err) {
-          console.log('puta')
           console.log("error: ", err);
           result(null, err);
           return;
@@ -55,7 +56,6 @@ const getRecordByField = async (field, result) => {
       if (err) {
         console.log(err)
       } else {
-
         data.map( async(value,index) => {
           Sesion.getMsgById(value.id, async (err, dataMsg) => {
             if (err) {
@@ -65,28 +65,40 @@ const getRecordByField = async (field, result) => {
                 nombre_unico: `${value.nombre}-${value.id}`,
                 contacto_inicio: value.fecha_primera_interaccion,
                 ultimo_contacto: value.fecha_ultima_interaccion,
-                ultimo_mensaje_masivo_enviado: 'lorem ipsum',
+                fecha_ultimo_mensaje_masivo_enviado: value.fecha_ultimo_mensaje_masivo_enviado,
                 cantidad_interacciones: dataMsg.length,
-                cliente: false
+                cliente: value.es_cliente == 0 ? false : true
               };
-              // getRecordByField('puta', async (err,resultRecord) => {
+              console.log(sesion)
               getRecordByField(sesion.nombre_unico, async (err,resultRecord) => {
                 if(err){
                   // console.log(err)
-                  console.log('marico un error')
+                  console.log('error')
                 }
                 if(resultRecord) {
-                  console.log('ok')
+                  console.log('acutalizando record')
                   console.log(resultRecord)
-                  updateRecord(resultRecord.id, sesion)
+                  await updateRecord(resultRecord.id, sesion)
+                  console.log('sesion actualizada')
+                  parentPort.postMessage('done');
                 } else {
-                  createRecord(sesion)
-                  console.log('caballo homosexual ')
+                  console.log('crear nuevo record')
+                  try {
+                    await createRecord(sesion)
+                  } catch (error) {
+                    console.log('error!')
+                    console.log(error)
+                    // parentPort.postMessage('error on creating record');
+                  }
+                  // console.log('sesion creada')
                 }
               })  
             }
           });
-      })
+        })
+        // parentPort.postMessage('done');
+
+
         // for (let contact of data) {
         //    console.log('running for user', contact.id)
         //    Sesion.getMsgById(contact.id, async (err, dataMsg) => {

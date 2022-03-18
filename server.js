@@ -32,14 +32,18 @@ const Bree = require('bree')
 const bree = new Bree({
   jobs : [
     // runs the job on Start
-    {
-      name : 'sample',
-      interval : '20s' //run the script after 200 seconds from the start
-    },
     // {
-    //   name : 'sampletwo',
-    //   interval : '30s' //run the script after 30 seconds from the start
-    // }
+    //   name : 'metrics',
+    //   interval : '20s' //run the script after 200 seconds from the start
+    // },
+    // {
+    //   name : 'sample', //send msg between 30 and 60 days
+    //   interval : '20s' //run the script after 200 seconds from the start
+    // },
+    {
+      name : 'sampletwo',
+      interval : '30s' //run the script after 30 seconds from the start
+    }
   ]
 })
 bree.start()

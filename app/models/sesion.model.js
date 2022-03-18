@@ -2,11 +2,12 @@ const sql = require("./db.js");
 
 // constructor
 const Sesion = function(sesion) {
-  this.contacto_inicio = sesion.contacto_inicio;
-  this.ultimo_contacto = sesion.ultimo_contacto;
-  this.ultimo_mensaje_masivo_enviado = sesion.ultimo_mensaje_masivo_enviado;
+  this.fecha_primera_interaccion = sesion.fecha_primera_interaccion;
+  this.fecha_ultima_interaccion = sesion.fecha_ultima_interaccion;
+  this.fecha_ultimo_mensaje_masivo_enviado = sesion.fecha_ultimo_mensaje_masivo_enviado;
+  this.nombre = sesion.nombre;
+  this.es_cliente = sesion.es_cliente;
   this.cantidad_interacciones = sesion.cantidad_interacciones;
-  this.cliente = sesion.cliente;
 };
 
 
@@ -132,7 +133,7 @@ Sesion.create = (newSession, result) => {
 };
 
 Sesion.getMsgById = (id, result) => {
-  sql.query(`SELECT * FROM mensajes WHERE contacto_id = ${id}`, (err, res) => {
+  sql.query(`SELECT * FROM mensajes WHERE id_contacto = ${id}`, (err, res) => {
     if (err) {
       console.log("error: ", err);
       result(err, null);
@@ -163,6 +164,23 @@ Sesion.getAll = (result) => {
     result(null, res);
   });
 };
+//mudar a otro modelo mensajes
+Sesion.getAllMensajes = (result) => {
+  let query = "SELECT * FROM mensajes";
+  // let query = "SELECT * FROM tutorials";
+  sql.query(query, (err, res) => {
+    if (err) {
+      console.log("error: ", err);
+      result(null, err);
+      return;
+    }
+    // console.log("tutorials: ", res);
+    result(null, res);
+  });
+};
+
+
+
 //mudar a otro modelo contactos
 Sesion.getAllContactos = (result) => {
   let query = "SELECT * FROM contactos";
@@ -179,7 +197,72 @@ Sesion.getAllContactos = (result) => {
 };
 
 
+Sesion.getContactByName = (name, result) => {
+  sql.query(`SELECT * FROM contactos WHERE nombre = "${name}"`, (err, res) => {
+    if (err) {
+      console.log("error: ", err);
+      result(err, null);
+      return;
+    }
 
+    if (res.length) {
+      // console.log("found msgs: ", res.length);
+      result(null, res);
+      return;
+    } else {
+    // not found contact with the id
+    result(null, 'no existe');
+    return;
+    }
+  });
+};
+
+Sesion.createContact = (newContact, result) => {
+  sql.query("INSERT INTO contactos SET ?", newContact, (err, res) => {
+    if (err) {
+      console.log("error: ", err);
+      result(err, null);
+      return;
+    }
+    // console.log("created contact: ", { id: res.insertId, ...newContact });
+    result(null, { id: res.insertId, ...newContact });
+  });
+};
+Sesion.createMensaje = (newMsg, result) => {
+  sql.query("INSERT INTO mensajes SET ?", newMsg, (err, res) => {
+    if (err) {
+      console.log("error: ", err);
+      result(err, null);
+      return;
+    }
+    console.log("created msg: ", { id: res.insertId, ...newMsg });
+    result(null, { id: res.insertId, ...newMsg });
+  });
+};
+
+
+Sesion.updateContactInteraction = (id, contact, result) => {
+  sql.query(
+    "UPDATE contactos SET fecha_ultima_interaccion = ?, cantidad_interacciones = cantidad_interacciones + ? WHERE id = ?",
+    [contact.fecha_ultima_interaccion, contact.cantidad_interacciones, id],
+    (err, resData) => {
+      if (err) {
+        console.log("error: ", err);
+        result(null, err);
+        return;
+      }
+
+      if (resData.affectedRows == 0) {
+        // not found contact with the id
+        result({ kind: "not_found" }, null);
+        return;
+      }
+      // console.log(resData)
+      // console.log("updated contact: ", { id: id, ...contact,resData });
+      result(null, { id:id, ...contact });
+    }
+  );
+};
 
 
 
