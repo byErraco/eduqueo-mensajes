@@ -62,7 +62,9 @@ const getRecordByField = async (field, result) => {
               console.log(err)
             } else {
               const sesion = {
-                nombre_unico: `${value.nombre}-${value.id}`,
+                nombre_unico: `${value.nombre}`,
+                asesor_id: value.asesor_id,
+                // nombre_unico: `${value.nombre}-${value.id}`,
                 contacto_inicio: value.fecha_primera_interaccion,
                 ultimo_contacto: value.fecha_ultima_interaccion,
                 fecha_ultimo_mensaje_masivo_enviado: value.fecha_ultimo_mensaje_masivo_enviado,

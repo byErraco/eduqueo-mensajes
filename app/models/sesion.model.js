@@ -8,6 +8,7 @@ const Sesion = function(sesion) {
   this.nombre = sesion.nombre;
   this.es_cliente = sesion.es_cliente;
   this.cantidad_interacciones = sesion.cantidad_interacciones;
+  this.asesor_id = sesion.asesor_id;
 };
 
 

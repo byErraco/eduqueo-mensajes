@@ -12,10 +12,10 @@ const { parentPort } = require('worker_threads');
           for (let value of data) {
 
             var Difference_In_Time = present_date.getTime() - value.fecha_ultima_interaccion.getTime();
-            console.log(Difference_In_Time)
+            // console.log(Difference_In_Time)
             var Difference_In_Days = Difference_In_Time / (1000 * 3600 * 24);
             // console.log(value);
-            // console.log(Difference_In_Days);
+            console.log(Difference_In_Days);
             if (Difference_In_Days > 30 && Difference_In_Days < 60) {
               console.log('send message!')
               parentPort.postMessage('done');

@@ -5,6 +5,7 @@ module.exports = app => {
 
   
   router.post("/mensaje", tutorials.saveMsg);
+  router.post("/airtable-mensajes", tutorials.airtableMensajes);
   
   // // Create a new Tutorial
   // router.post("/", tutorials.create);
