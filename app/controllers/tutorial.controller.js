@@ -39,60 +39,47 @@ const createRecord = async (fields) => {
 
 
 exports.airtableMensajes = async (req,res) => {
+  console.log(req.body)
 
-  const arrClientes = req.body.arr
+  // const arrClientes = req.body.arr
 
-  console.log(arrClientes)
+  // console.log(arrClientes)
 
-  let apiKey = ''
-  let deviceId = ''
-  let scriptName = 'texto_libre'
-  var requestOptions = {
-  method: 'POST',
-  redirect: 'follow'
-  };
+  // let apiKey = ''
+  // let deviceId = ''
+  // let scriptName = 'texto_libre'
+  // var requestOptions = {
+  // method: 'POST',
+  // redirect: 'follow'
+  // };
 
-  arrClientes.forEach((cliente, i) => {
-    setTimeout(() => {
-      if(cliente.asesorId === "1") {
-        //benedicto
-        apiKey = '169ab9e615844a4a8eb568684e679243'
-        deviceId = 'dc870804ed09496bb86ec9c7be6dc3ff'
-      }
-      if(cliente.asesorId === '2') {
-        //ebano
-        apiKey = '10896fe04b7143189be93d6a47b85805'
-        deviceId = '4d9ad1708664485b84db73930bc444dc'
-      }
-      let body = {
-              "name": cliente.clienteNombre,
-              "message": "Hola!☀️ Me preguntaba que tal estabas y como iba todo por ahi.",
-              // "name": `La Rosalia`,
-              // "message": "Hola!☀️ Me preguntaba que tal estabas y como iba todo por ahi.",
-          }
-        fetch(`https://joinjoaomgcd.appspot.com/_ah/api/messaging/v1/sendPush?apikey=${apiKey}&text=${encodeURIComponent(JSON.stringify(body))}&title=saokoooooo2&deviceId=${deviceId}`, requestOptions)
-          .then(response => response.text())
-          .then(result => console.log(result))
-          .catch(error => console.log('error', error));
+  // arrClientes.forEach((cliente, i) => {
+  //   setTimeout(() => {
+  //     if(cliente.asesorId === "1") {
+  //       //benedicto
+  //       apiKey = '169ab9e615844a4a8eb568684e679243'
+  //       deviceId = 'dc870804ed09496bb86ec9c7be6dc3ff'
+  //     }
+  //     if(cliente.asesorId === '2') {
+  //       //ebano
+  //       apiKey = '10896fe04b7143189be93d6a47b85805'
+  //       deviceId = '4d9ad1708664485b84db73930bc444dc'
+  //     }
+  //     let body = {
+  //             "name": cliente.clienteNombre,
+  //             "message": "Hola!☀️ Me preguntaba que tal estabas y como iba todo por ahi.",
+  //             // "name": `La Rosalia`,
+  //             // "message": "Hola!☀️ Me preguntaba que tal estabas y como iba todo por ahi.",
+  //         }
+  //       fetch(`https://joinjoaomgcd.appspot.com/_ah/api/messaging/v1/sendPush?apikey=${apiKey}&text=${encodeURIComponent(JSON.stringify(body))}&title=saokoooooo2&deviceId=${deviceId}`, requestOptions)
+  //         .then(response => response.text())
+  //         .then(result => console.log(result))
+  //         .catch(error => console.log('error', error));
 
-    }, i * 10000);
-  });
-  
+  //   }, i * 10000);
+  // });
 
 
-//   var apikey = '10896fe04b7143189be93d6a47b85805'
-//   var deviceId = '4d9ad1708664485b84db73930bc444dc'
-
-//   console.log(req.body)
-
-//  let body = {
-//         "name": `La Rosalia`,
-//         "message": "Hola!☀️ Me preguntaba que tal estabas y como iba todo por ahi.",
-//     }
-//   fetch(`https://joinjoaomgcd.appspot.com/_ah/api/messaging/v1/sendPush?apikey=${apikey}&text=${encodeURIComponent(JSON.stringify(body))}&title=saokoooooo2&deviceId=${deviceId}`, requestOptions)
-//     .then(response => response.text())
-//     .then(result => console.log(result))
-//     .catch(error => console.log('error', error));
 
   res.status(200).send('Recibido')
 }
