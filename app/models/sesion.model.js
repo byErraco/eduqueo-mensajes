@@ -264,6 +264,28 @@ Sesion.updateContactInteraction = (id, contact, result) => {
     }
   );
 };
+Sesion.updateContactInteractionByName = (name, date, result) => {
+  sql.query(
+    `UPDATE contactos SET fecha_ultima_interaccion = ?, cantidad_interacciones = cantidad_interacciones + ? WHERE nombre = ?`,
+    [date, name],
+    (err, resData) => {
+      if (err) {
+        console.log("error: ", err);
+        result(null, err);
+        return;
+      }
+
+      if (resData.affectedRows == 0) {
+        // not found contact with the id
+        result({ kind: "not_found" }, null);
+        return;
+      }
+      // console.log(resData)
+      // console.log("updated contact: ", { id: id, ...contact,resData });
+      result(null, { id:id, ...contact });
+    }
+  );
+};
 
 
 

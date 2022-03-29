@@ -36,13 +36,38 @@ const createRecord = async (fields) => {
   return minifyRecord(createdRecord)
 };
 
+const updateRecord = async (id, fields) => {
+  const updatedRecord = await tablaSesiones.update(id, fields);
+  console.log(minifyRecord(updatedRecord));
+};
 
+
+const getRecordByField = async (field, result) => {
+  const record = await tablaSesiones.select({
+      filterByFormula: `{nombre_unico} = "${field}"`
+  }).firstPage(function(err,records) {
+      if(err) {
+          console.log("error: ", err);
+          result(null, err);
+          return;
+      }
+      if(records.length === 0){
+        result(null, err);
+        return;
+      }
+      const minified = minifyRecord(records[0])
+      result(null,minified);
+      return;
+  });
+};
 
 exports.airtableMensajes = async (req,res) => {
 
   const arrClientes = req.body.arr
+  const mensaje = req.body.mensaje
 
   console.log(arrClientes)
+  console.log(mensaje)
 
   let apiKey = ''
   let deviceId = ''
@@ -68,18 +93,62 @@ exports.airtableMensajes = async (req,res) => {
       }
       let body = {
               "name": cliente.clienteNombre,
-              "message": "Hola!☀️ Me preguntaba que tal estabas y como iba todo por ahi.",
+              "message": mensaje,
+              // "message": "Hola!☀️ Me preguntaba que tal estabas y como iba todo por ahi.",
               // "name": `La Rosalia`,
               // "message": "Hola!☀️ Me preguntaba que tal estabas y como iba todo por ahi.",
           }
           console.log(body)
         fetch(`https://joinjoaomgcd.appspot.com/_ah/api/messaging/v1/sendPush?apikey=${apiKey}&text=${encodeURIComponent(JSON.stringify(body))}&title=saokoooooo2&deviceId=${deviceId}`, requestOptions)
           .then(response => response.text())
-          .then(result => console.log(result))
+          .then(result => {
+
+            console.log(result)
+            var now = new Date();
+            var utc = new Date(now.getTime() + now.getTimezoneOffset() * 60000);
+          
+            //update contact in the db (amount of interactions and last date of interaction)
+            Sesion.updateContactInteractionByName(cliente.clienteNombre,utc, async (err, contactoUpdateado) => {
+              if (err) {
+                console.log('Hubo un error actualizando la ultima interaccion')
+              } else {
+                console.log('Ultimo contacto actualizado en la base de datos... ahora airtable')
+                getRecordByField(cliente.clienteNombre, async (err,resultRecord) => {
+                  if(err){
+                    // console.log(err)
+                    console.log('error')
+                  }
+                  if(resultRecord) {
+                    const sesion = {
+                      fecha_ultimo_mensaje_masivo_enviado: utc,
+                      //actualizar cantidad de interacciones?
+                      // cantidad_interacciones: dataMsg.length,
+                    };
+                    console.log('acutalizando record')
+                    console.log(resultRecord)
+                    await updateRecord(resultRecord.id, sesion)
+                    console.log('sesion actualizada')
+                    parentPort.postMessage('done');
+                  } else {
+                    console.log('crear nuevo record')
+                    try {
+                      await createRecord(sesion)
+                    } catch (error) {
+                      console.log('error!')
+                      console.log(error)
+                      // parentPort.postMessage('error on creating record');
+                    }
+                    // console.log('sesion creada')
+                  }
+                }) 
+              }
+            })
+
+          })
           .catch(error => console.log('error', error));
           console.log('Enviando a tasker...')
 
-    }, i * 10000);
+    }, i * 20000);
   });
 
 
