@@ -40,16 +40,20 @@ const bree = new Bree({
     //   interval : '20s' //run the script after 200 seconds from the start
     // },
     {
-      name : 'sample', //send msg between 30 and 60 days
-      interval : '20s' //run the script after 200 seconds from the start
+      name : 'test', //send msg between 30 and 60 days
+      interval : 'at 18:25 pm' //run the script after 200 seconds from the start
     },
+    // {
+    //   name : 'sample', //send msg between 30 and 60 days
+    //   interval : '20s' //run the script after 200 seconds from the start
+    // },
     // {
     //   name : 'sampletwo', // create sesion info for clients in airtable
     //   interval : '10s' //run the script after 30 seconds from the start
     // }
   ]
 })
-// bree.start()
+bree.start()
 
 
 // set port, listen for requests
