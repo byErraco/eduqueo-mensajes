@@ -176,13 +176,20 @@ exports.saveMsg = async (req, res) => {
     }
     if(contact == 'no existe') {
       console.log('No existe bro, creando...')
+      var es_cliente 
+      if(nombre_contacto.startsWith("AA")) {
+        es_cliente = true
+      } else {
+        es_cliente = false
+      }
 
       const nuevoContacto = new Sesion({
         fecha_primera_interaccion: utc,
         fecha_ultima_interaccion: utc,
         fecha_ultimo_mensaje_masivo_enviado: utc,
         nombre: nombre_contacto,
-        es_cliente: req.body.es_cliente || false,
+        es_cliente: es_cliente,
+        // es_cliente: req.body.es_cliente || false,
         cantidad_interacciones: 1,
         asesor_id: req.body.asesor_id
       });
