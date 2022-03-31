@@ -68,14 +68,11 @@ const getRecordByField = async (field, result) => {
                 console.log(obj)
                 if(obj.es_cliente === 1) {
                   es_cliente = true
-                  console.log('a')
                 } else {
                   if(obj.nombre.startsWith("AA")) {
                     es_cliente = true
-                    console.log('aa')
                   } else {
                     es_cliente = false
-                    console.log('aaa')
                   }
                 }
   
@@ -97,17 +94,13 @@ const getRecordByField = async (field, result) => {
                     console.log('error')
                   }
                   if(resultRecord) {
-                    console.log('acutalizando record')
-                    console.log(resultRecord)
                     try {
                       await updateRecord(resultRecord.id, sesion)
-                      console.log('sesion actualizada')
                       resolve()
                     } catch (error) {
                       console.log('error actualizando sesion')
                     }
                   } else {
-                    console.log('crear nuevo record')
                     try {
                       await createRecord(sesion)
                       resolve()

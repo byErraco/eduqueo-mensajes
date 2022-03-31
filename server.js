@@ -49,7 +49,7 @@ const bree = new Bree({
     },
     {
       name : 'sampletwo', // create sesion info for clients in airtable
-      interval : '30m' //run the script after 30 seconds from the start
+      interval : '20s' //run the script after 30 seconds from the start
     }
   ]
 })

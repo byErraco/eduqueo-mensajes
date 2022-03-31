@@ -165,8 +165,21 @@ exports.saveMsg = async (req, res) => {
       message: "Content can not be empty!"
     });
   }
-  console.log(req.body)
   const {nombre_contacto} = req.body
+  if (nombre_contacto.includes('Equipo Eduqueo')) {
+    console.log( "Equipo eduqueo no aceptado!")
+    res.status(400).send({
+      message: "Equipo eduqueo no aceptado!"
+    });
+  }
+  const regexExp = /(\u00a9|\u00ae|[\u2000-\u3300]|\ud83c[\ud000-\udfff]|\ud83d[\ud000-\udfff]|\ud83e[\ud000-\udfff])/gi;
+  if (regexExp.test(nombre_contacto)) {
+    console.log("No se aceptan contactos con emojis!")
+    res.status(400).send({
+      message: "No se aceptan contactos con emojis!"
+    });
+  }
+  console.log(req.body)
 
   var now = new Date();
   var utc = new Date(now.getTime() + now.getTimezoneOffset() * 60000);
