@@ -4,6 +4,9 @@ const cors = require("cors");
 var morgan = require('morgan')
 const app = express();
 
+var http = require("http");
+
+
 // var corsOptions = {
 //   origin: "http://localhost:8081"
 // };
@@ -51,6 +54,10 @@ const bree = new Bree({
   ]
 })
 bree.start()
+
+setInterval(function() {
+  http.get("http://estudiar-hoy-api.herokuapp.com/");
+}, 300000 * 6); // every 5 minutes (300000)
 
 
 // set port, listen for requests
