@@ -1,6 +1,5 @@
 const fetch = require('node-fetch')
 const Sesion = require("../models/sesion.model.js");
-const { parentPort } = require('worker_threads');
 
 
 const Airtable = require('airtable');
@@ -130,7 +129,6 @@ exports.airtableMensajes = async (req,res) => {
                     console.log(resultRecord)
                     await updateRecord(resultRecord.id, sesion)
                     console.log('sesion actualizada')
-                    parentPort.postMessage('done');
                   // } else {
                   //   console.log('crear nuevo record')
                   //   try {
