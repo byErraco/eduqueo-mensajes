@@ -267,7 +267,7 @@ Sesion.updateContactInteraction = (id, contact, result) => {
 Sesion.updateContactInteractionByName = (name, date, result) => {
   sql.query(
     `UPDATE contactos SET fecha_ultima_interaccion = ?, cantidad_interacciones = cantidad_interacciones + ? WHERE nombre = ?`,
-    [date, name],
+    [date, 1,name],
     (err, resData) => {
       if (err) {
         console.log("error: ", err);
