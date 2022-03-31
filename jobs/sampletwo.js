@@ -56,65 +56,142 @@ const getRecordByField = async (field, result) => {
       if (err) {
         console.log(err)
       } else {
-        data.map( async(value,index) => {
-          Sesion.getMsgById(value.id, async (err, dataMsg) => {
-            if (err) {
-              console.log(err)
-            } else {
-              var es_cliente 
-              console.log(value)
-              if(value.es_cliente === 1) {
-                es_cliente = true
-                console.log('a')
-              } else {
-                if(value.nombre.startsWith("AA")) {
-                  es_cliente = true
-                  console.log('aa')
-                } else {
-                  es_cliente = false
-                  console.log('aaa')
-                }
-              }
 
-              const sesion = {
-                nombre_unico: `${value.nombre}`,
-                asesor_id: value.asesor_id,
-                // nombre_unico: `${value.nombre}-${value.id}`,
-                contacto_inicio: value.fecha_primera_interaccion,
-                ultimo_contacto: value.fecha_ultima_interaccion,
-                fecha_ultimo_mensaje_masivo_enviado: value.fecha_ultimo_mensaje_masivo_enviado,
-                cantidad_interacciones: dataMsg.length,
-                cliente: es_cliente
-                // cliente: value.es_cliente == 0 ? false : true
-              };
-              // console.log(sesion)
-              getRecordByField(sesion.nombre_unico, async (err,resultRecord) => {
-                if(err){
-                  // console.log(err)
-                  console.log('error')
-                }
-                if(resultRecord) {
-                  console.log('acutalizando record')
-                  console.log(resultRecord)
-                  await updateRecord(resultRecord.id, sesion)
-                  console.log('sesion actualizada')
-                  // parentPort.postMessage('done');
+
+        function updateCreateSesion(obj) {
+          return new Promise((resolve, reject) => {
+            Sesion.getMsgById(obj.id, async (err, dataMsg) => {
+              if (err) {
+                console.log(err)
+              } else {
+                var es_cliente 
+                console.log(obj)
+                if(obj.es_cliente === 1) {
+                  es_cliente = true
+                  console.log('a')
                 } else {
-                  console.log('crear nuevo record')
-                  try {
-                    await createRecord(sesion)
-                  } catch (error) {
-                    console.log('error!')
-                    console.log(error)
-                    // parentPort.postMessage('error on creating record');
+                  if(obj.nombre.startsWith("AA")) {
+                    es_cliente = true
+                    console.log('aa')
+                  } else {
+                    es_cliente = false
+                    console.log('aaa')
                   }
-                  // console.log('sesion creada')
                 }
-              })  
-            }
+  
+                const sesion = {
+                  nombre_unico: `${obj.nombre}`,
+                  asesor_id: obj.asesor_id,
+                  // nombre_unico: `${value.nombre}-${value.id}`,
+                  contacto_inicio: obj.fecha_primera_interaccion,
+                  ultimo_contacto: obj.fecha_ultima_interaccion,
+                  fecha_ultimo_mensaje_masivo_enviado: obj.fecha_ultimo_mensaje_masivo_enviado,
+                  cantidad_interacciones: dataMsg.length,
+                  cliente: es_cliente
+                  // cliente: obj.es_cliente == 0 ? false : true
+                };
+                // console.log(sesion)
+                getRecordByField(sesion.nombre_unico, async (err,resultRecord) => {
+                  if(err){
+                    // console.log(err)
+                    console.log('error')
+                  }
+                  if(resultRecord) {
+                    console.log('acutalizando record')
+                    console.log(resultRecord)
+                    try {
+                      await updateRecord(resultRecord.id, sesion)
+                      console.log('sesion actualizada')
+                      resolve()
+                    } catch (error) {
+                      console.log('error actualizando sesion')
+                    }
+                  } else {
+                    console.log('crear nuevo record')
+                    try {
+                      await createRecord(sesion)
+                      resolve()
+                    } catch (error) {
+                      console.log('error!')
+                      console.log(error)
+                    }
+                  }
+                })  
+              }
+            });
           });
-        })
+        }
+
+        let promiseArr = [];
+        data.forEach(obj => promiseArr.push(updateCreateSesion(obj)));
+        Promise.all(promiseArr)
+          .then((res) => {
+            console.log('Listo aqui')
+            parentPort.postMessage('done');
+          })
+          .catch(err => console.log(res))
+
+
+        // data.map( async(value,index) => {
+        //   Sesion.getMsgById(value.id, async (err, dataMsg) => {
+        //     if (err) {
+        //       console.log(err)
+        //     } else {
+        //       var es_cliente 
+        //       console.log(value)
+        //       if(value.es_cliente === 1) {
+        //         es_cliente = true
+        //         console.log('a')
+        //       } else {
+        //         if(value.nombre.startsWith("AA")) {
+        //           es_cliente = true
+        //           console.log('aa')
+        //         } else {
+        //           es_cliente = false
+        //           console.log('aaa')
+        //         }
+        //       }
+
+        //       const sesion = {
+        //         nombre_unico: `${value.nombre}`,
+        //         asesor_id: value.asesor_id,
+        //         // nombre_unico: `${value.nombre}-${value.id}`,
+        //         contacto_inicio: value.fecha_primera_interaccion,
+        //         ultimo_contacto: value.fecha_ultima_interaccion,
+        //         fecha_ultimo_mensaje_masivo_enviado: value.fecha_ultimo_mensaje_masivo_enviado,
+        //         cantidad_interacciones: dataMsg.length,
+        //         cliente: es_cliente
+        //         // cliente: value.es_cliente == 0 ? false : true
+        //       };
+        //       // console.log(sesion)
+        //       getRecordByField(sesion.nombre_unico, async (err,resultRecord) => {
+        //         if(err){
+        //           // console.log(err)
+        //           console.log('error')
+        //         }
+        //         if(resultRecord) {
+        //           console.log('acutalizando record')
+        //           console.log(resultRecord)
+        //           await updateRecord(resultRecord.id, sesion)
+        //           console.log('sesion actualizada')
+        //           // parentPort.postMessage('done');
+        //         } else {
+        //           console.log('crear nuevo record')
+        //           try {
+        //             await createRecord(sesion)
+        //           } catch (error) {
+        //             console.log('error!')
+        //             console.log(error)
+        //           }
+        //         }
+        //       })  
+        //     }
+        //   });
+        // })
+        // parentPort.postMessage('error on creating record');
         // parentPort.postMessage('done');
+
+
 
 
         // for (let contact of data) {
