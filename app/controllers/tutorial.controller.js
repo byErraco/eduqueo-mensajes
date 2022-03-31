@@ -1,5 +1,7 @@
 const fetch = require('node-fetch')
 const Sesion = require("../models/sesion.model.js");
+const { parentPort } = require('worker_threads');
+
 
 const Airtable = require('airtable');
 
