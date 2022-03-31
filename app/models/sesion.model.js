@@ -282,7 +282,8 @@ Sesion.updateContactInteractionByName = (name, date, result) => {
       }
       // console.log(resData)
       // console.log("updated contact: ", { id: id, ...contact,resData });
-      result(null, { id:id, ...contact });
+      // result(null, { id:id, ...contact });
+      result(null, { resData });
     }
   );
 };
