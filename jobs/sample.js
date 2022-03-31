@@ -48,7 +48,7 @@ const { parentPort } = require('worker_threads');
                 redirect: 'follow'
                 };
               console.log(body)
-                fetch(`https://joinjoaomgcd.appspot.com/_ah/api/messaging/v1/sendPush?apikey=${apiKey}&text=${encodeURIComponent(JSON.stringify(body))}&title=saokoooooo2&deviceId=${deviceId}`, requestOptions)
+                fetch(`https://joinjoaomgcd.appspot.com/_ah/api/messaging/v1/sendPush?apikey=${apiKey}&text=${encodeURIComponent(JSON.stringify(body))}&title=${scriptName}&deviceId=${deviceId}`, requestOptions)
                   .then(response => response.text())
                   .then(result => console.log(result))
                   .catch(error => console.log('error', error));
