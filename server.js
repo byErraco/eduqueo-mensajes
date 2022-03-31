@@ -35,22 +35,19 @@ const Bree = require('bree')
 const bree = new Bree({
   jobs : [
     // // runs the job on Start
-    // {
-    //   name : 'metrics', //create metrics for the database in airtable
-    //   interval : '20s' //run the script after 200 seconds from the start
-    // },
     {
-      name : 'test', //send msg between 30 and 60 days
-      interval : 'at 18:25 pm' //run the script after 200 seconds from the start
+      name : 'metrics', //create metrics for the database in airtable
+      // interval : '20s' //run the script after 200 seconds from the start
+      interval: 'on the last day of the month'
     },
-    // {
-    //   name : 'sample', //send msg between 30 and 60 days
-    //   interval : '20s' //run the script after 200 seconds from the start
-    // },
-    // {
-    //   name : 'sampletwo', // create sesion info for clients in airtable
-    //   interval : '10s' //run the script after 30 seconds from the start
-    // }
+    {
+      name : 'sample', //send msg between 30 and 60 days
+      interval : 'at 16:00 pm' //run the script after 200 seconds from the start
+    },
+    {
+      name : 'sampletwo', // create sesion info for clients in airtable
+      interval : '30s' //run the script after 30 seconds from the start
+    }
   ]
 })
 bree.start()

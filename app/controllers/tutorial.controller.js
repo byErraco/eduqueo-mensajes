@@ -71,7 +71,7 @@ exports.airtableMensajes = async (req,res) => {
 
   let apiKey = ''
   let deviceId = ''
-  let scriptName = 'texto_libre'
+  let scriptName = 'texto_libre_nombre'
   var requestOptions = {
   method: 'POST',
   redirect: 'follow'
@@ -99,7 +99,7 @@ exports.airtableMensajes = async (req,res) => {
               // "message": "Hola!☀️ Me preguntaba que tal estabas y como iba todo por ahi.",
           }
           console.log(body)
-        fetch(`https://joinjoaomgcd.appspot.com/_ah/api/messaging/v1/sendPush?apikey=${apiKey}&text=${encodeURIComponent(JSON.stringify(body))}&title=saokoooooo2&deviceId=${deviceId}`, requestOptions)
+        fetch(`https://joinjoaomgcd.appspot.com/_ah/api/messaging/v1/sendPush?apikey=${apiKey}&text=${encodeURIComponent(JSON.stringify(body))}&title=${scriptName}&deviceId=${deviceId}`, requestOptions)
           .then(response => response.text())
           .then(result => {
 
@@ -118,7 +118,7 @@ exports.airtableMensajes = async (req,res) => {
                     // console.log(err)
                     console.log('error')
                   }
-                  if(resultRecord) {
+                  // if(resultRecord) {
                     const sesion = {
                       fecha_ultimo_mensaje_masivo_enviado: utc,
                       //actualizar cantidad de interacciones?
@@ -129,17 +129,17 @@ exports.airtableMensajes = async (req,res) => {
                     await updateRecord(resultRecord.id, sesion)
                     console.log('sesion actualizada')
                     parentPort.postMessage('done');
-                  } else {
-                    console.log('crear nuevo record')
-                    try {
-                      await createRecord(sesion)
-                    } catch (error) {
-                      console.log('error!')
-                      console.log(error)
-                      // parentPort.postMessage('error on creating record');
-                    }
-                    // console.log('sesion creada')
-                  }
+                  // } else {
+                  //   console.log('crear nuevo record')
+                  //   try {
+                  //     await createRecord(sesion)
+                  //   } catch (error) {
+                  //     console.log('error!')
+                  //     console.log(error)
+                  //     // parentPort.postMessage('error on creating record');
+                  //   }
+                  //   // console.log('sesion creada')
+                  // }
                 }) 
               }
             })
@@ -157,6 +157,7 @@ exports.airtableMensajes = async (req,res) => {
 }
 
 // Crear y guardar nueva sesion
+//revisar si se puede cambiar el campo en airtable a q sea date y no string
 exports.saveMsg = async (req, res) => {
   // Validate request
   if (!req.body) {
@@ -227,9 +228,16 @@ exports.saveMsg = async (req, res) => {
     } else {
       console.log('vamos a updatear a')
       console.log(contact[0])
+      var es_cliente 
+      if(nombre_contacto.startsWith("AA")) {
+        es_cliente = true
+      } else {
+        es_cliente = false
+      }
       const updateContacto = new Sesion({
         fecha_ultima_interaccion: utc,
-        cantidad_interacciones: 1
+        cantidad_interacciones: 1,
+        es_cliente: es_cliente,
       });
       //update contact in the db (amount of interactions and last date of interaction)
       Sesion.updateContactInteraction(contact[0].id,updateContacto, async (err, contactoUpdateado) => {

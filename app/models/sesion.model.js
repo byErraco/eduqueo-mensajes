@@ -244,8 +244,8 @@ Sesion.createMensaje = (newMsg, result) => {
 
 Sesion.updateContactInteraction = (id, contact, result) => {
   sql.query(
-    "UPDATE contactos SET fecha_ultima_interaccion = ?, cantidad_interacciones = cantidad_interacciones + ? WHERE id = ?",
-    [contact.fecha_ultima_interaccion, contact.cantidad_interacciones, id],
+    "UPDATE contactos SET fecha_ultima_interaccion = ?, cantidad_interacciones = cantidad_interacciones + ?, es_cliente = ? WHERE id = ?",
+    [contact.fecha_ultima_interaccion, contact.cantidad_interacciones, contact.es_cliente, id],
     (err, resData) => {
       if (err) {
         console.log("error: ", err);

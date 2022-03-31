@@ -61,6 +61,21 @@ const getRecordByField = async (field, result) => {
             if (err) {
               console.log(err)
             } else {
+              var es_cliente 
+              console.log(value)
+              if(value.es_cliente === 1) {
+                es_cliente = true
+                console.log('a')
+              } else {
+                if(value.nombre.startsWith("AA")) {
+                  es_cliente = true
+                  console.log('aa')
+                } else {
+                  es_cliente = false
+                  console.log('aaa')
+                }
+              }
+
               const sesion = {
                 nombre_unico: `${value.nombre}`,
                 asesor_id: value.asesor_id,
@@ -69,9 +84,10 @@ const getRecordByField = async (field, result) => {
                 ultimo_contacto: value.fecha_ultima_interaccion,
                 fecha_ultimo_mensaje_masivo_enviado: value.fecha_ultimo_mensaje_masivo_enviado,
                 cantidad_interacciones: dataMsg.length,
-                cliente: value.es_cliente == 0 ? false : true
+                cliente: es_cliente
+                // cliente: value.es_cliente == 0 ? false : true
               };
-              console.log(sesion)
+              // console.log(sesion)
               getRecordByField(sesion.nombre_unico, async (err,resultRecord) => {
                 if(err){
                   // console.log(err)
@@ -82,7 +98,7 @@ const getRecordByField = async (field, result) => {
                   console.log(resultRecord)
                   await updateRecord(resultRecord.id, sesion)
                   console.log('sesion actualizada')
-                  parentPort.postMessage('done');
+                  // parentPort.postMessage('done');
                 } else {
                   console.log('crear nuevo record')
                   try {
