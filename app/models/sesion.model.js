@@ -179,6 +179,19 @@ Sesion.getAllMensajes = (result) => {
     result(null, res);
   });
 };
+Sesion.getAllMensajesByMonth = (result) => {
+  let query = "SELECT * FROM mensajes WHERE MONTH(fecha)=MONTH(now()) and YEAR(fecha)=YEAR(now())";
+  // let query = "SELECT * FROM tutorials";
+  sql.query(query, (err, res) => {
+    if (err) {
+      console.log("error: ", err);
+      result(null, err);
+      return;
+    }
+    // console.log("tutorials: ", res);
+    result(null, res);
+  });
+};
 
 
 

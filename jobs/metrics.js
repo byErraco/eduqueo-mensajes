@@ -34,17 +34,17 @@ const createRecord = async (fields) => {
     // var msgHours = []
     // var msgChar = ''
 
-    Sesion.getAllMensajes(async (err, data) => {
+    Sesion.getAllMensajesByMonth(async (err, data) => {
+    // Sesion.getAllMensajes(async (err, data) => {
+      console.log(data.length)
       if (err) {
         console.log(err)
       } else {
-
         for (let msgData of data) {
           if(msgData.id_celular == 1) phoneOneArr.push(msgData)
           if(msgData.id_celular == 2) phoneTwoArr.push(msgData)
         }
         var metrics = []
-
         metrics.push(phoneOneArr,phoneTwoArr);
 
         function createMetrics(metric) {
