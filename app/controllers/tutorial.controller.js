@@ -164,6 +164,7 @@ exports.saveMsg = async (req, res) => {
     res.status(400).send({
       message: "Content can not be empty!"
     });
+    return
   }
   const {nombre_contacto} = req.body
   if (nombre_contacto.includes('Equipo Eduqueo')) {
@@ -171,6 +172,7 @@ exports.saveMsg = async (req, res) => {
     res.status(400).send({
       message: "Equipo eduqueo no aceptado!"
     });
+    return
   }
   const regexExp = /(\u00a9|\u00ae|[\u2000-\u3300]|\ud83c[\ud000-\udfff]|\ud83d[\ud000-\udfff]|\ud83e[\ud000-\udfff])/gi;
   if (regexExp.test(nombre_contacto)) {
@@ -178,6 +180,7 @@ exports.saveMsg = async (req, res) => {
     res.status(400).send({
       message: "No se aceptan contactos con emojis!"
     });
+    return
   }
   console.log(req.body)
 
