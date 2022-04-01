@@ -26,7 +26,7 @@ const createRecord = async (fields) => {
 };
 const updateRecord = async (id, fields) => {
   const updatedRecord = await tablaSesiones.update(id, fields);
-  console.log(minifyRecord(updatedRecord));
+  // console.log(minifyRecord(updatedRecord));
 };
 const getRecordByField = async (field, result) => {
   const record = await tablaSesiones.select({
@@ -63,9 +63,11 @@ const getRecordByField = async (field, result) => {
             Sesion.getMsgById(obj.id, async (err, dataMsg) => {
               if (err) {
                 console.log(err)
+                resolve()
               } else {
                 var es_cliente 
-                console.log(obj)
+                // console.log(obj)
+                console.log('go')
                 if(obj.es_cliente === 1) {
                   es_cliente = true
                 } else {
@@ -94,20 +96,11 @@ const getRecordByField = async (field, result) => {
                     console.log('error')
                   }
                   if(resultRecord) {
-                    try {
                       await updateRecord(resultRecord.id, sesion)
                       resolve()
-                    } catch (error) {
-                      console.log('error actualizando sesion')
-                    }
                   } else {
-                    try {
                       await createRecord(sesion)
                       resolve()
-                    } catch (error) {
-                      console.log('error!')
-                      console.log(error)
-                    }
                   }
                 })  
               }
