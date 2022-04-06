@@ -48,21 +48,33 @@ const { parentPort } = require('worker_threads');
                 redirect: 'follow'
                 };
               console.log(body)
+              
                 fetch(`https://joinjoaomgcd.appspot.com/_ah/api/messaging/v1/sendPush?apikey=${apiKey}&text=${encodeURIComponent(JSON.stringify(body))}&title=${scriptName}&deviceId=${deviceId}`, requestOptions)
                   .then(response => response.text())
-                  .then(result => console.log(result))
+                  .then(result => {
+                    Sesion.updateContactInteractionByName(value.nombre,utc, async (err, contactoUpdateado) => {
+                      if (err) {
+                        console.log('Hubo un error actualizando la ultima interaccion')
+                      } else {
+                        console.log('Ultimo mensaje masivo actualizado en la base de datos... ahora airtable')
+                        getRecordByField(value.nombre, async (err,resultRecord) => {
+                          if(err){
+                            // console.log(err)
+                            console.log('error')
+                          }
+                            const sesion = {
+                              fecha_ultimo_mensaje_masivo_enviado: now,
+                            };
+                            console.log('acutalizando record')
+                            console.log(resultRecord)
+                            await updateRecord(resultRecord.id, sesion)
+                            console.log('sesion actualizada')
+                        }) 
+                      }
+                    })
+                  })
                   .catch(error => console.log('error', error));
                   console.log('Enviando a tasker...')
-          
-            
-            
-            
-            console.log('send message!')
-              // parentPort.postMessage('done');
-                //post to tasker
-                // const article = { title: 'Axios POST Request Example' };
-                // axios.post('https://reqres.in/api/articles', article)
-                // .then(response => console.log(response.data));
             }
 
             return new Promise(function (resolve) {

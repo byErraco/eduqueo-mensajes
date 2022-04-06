@@ -67,7 +67,7 @@ const getRecordByField = async (field, result) => {
               } else {
                 var es_cliente 
                 // console.log(obj)
-                console.log('go')
+                console.log('actualizando sesiones en airtable')
                 if(obj.es_cliente === 1) {
                   es_cliente = true
                 } else {

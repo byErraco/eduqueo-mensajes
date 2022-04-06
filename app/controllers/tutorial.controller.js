@@ -95,9 +95,6 @@ exports.airtableMensajes = async (req,res) => {
       let body = {
               "name": cliente.clienteNombre,
               "message": mensaje,
-              // "message": "Hola!☀️ Me preguntaba que tal estabas y como iba todo por ahi.",
-              // "name": `La Rosalia`,
-              // "message": "Hola!☀️ Me preguntaba que tal estabas y como iba todo por ahi.",
           }
           console.log(body)
         fetch(`https://joinjoaomgcd.appspot.com/_ah/api/messaging/v1/sendPush?apikey=${apiKey}&text=${encodeURIComponent(JSON.stringify(body))}&title=${scriptName}&deviceId=${deviceId}`, requestOptions)
@@ -107,7 +104,6 @@ exports.airtableMensajes = async (req,res) => {
             console.log(result)
             var now = new Date();
             var utc = new Date(now.getTime() + now.getTimezoneOffset() * 60000);
-          
             //update contact in the db (amount of interactions and last date of interaction)
             Sesion.updateContactInteractionByName(cliente.clienteNombre,utc, async (err, contactoUpdateado) => {
               if (err) {
@@ -116,12 +112,12 @@ exports.airtableMensajes = async (req,res) => {
                 console.log('Ultimo contacto actualizado en la base de datos... ahora airtable')
                 getRecordByField(cliente.clienteNombre, async (err,resultRecord) => {
                   if(err){
-                    // console.log(err)
                     console.log('error')
                   }
-                  // if(resultRecord) {
                     const sesion = {
-                      fecha_ultimo_mensaje_masivo_enviado: utc,
+                      fecha_ultimo_mensaje_masivo_enviado: now,
+                      // fecha_ultimo_mensaje_masivo_enviado: now,
+                      // fecha_ultimo_mensaje_masivo_enviado: utc,
                       //actualizar cantidad de interacciones?
                       // cantidad_interacciones: dataMsg.length,
                     };
@@ -129,21 +125,9 @@ exports.airtableMensajes = async (req,res) => {
                     console.log(resultRecord)
                     await updateRecord(resultRecord.id, sesion)
                     console.log('sesion actualizada')
-                  // } else {
-                  //   console.log('crear nuevo record')
-                  //   try {
-                  //     await createRecord(sesion)
-                  //   } catch (error) {
-                  //     console.log('error!')
-                  //     console.log(error)
-                  //     // parentPort.postMessage('error on creating record');
-                  //   }
-                  //   // console.log('sesion creada')
-                  // }
                 }) 
               }
             })
-
           })
           .catch(error => console.log('error', error));
           console.log('Enviando a tasker...')
@@ -192,7 +176,6 @@ exports.saveMsg = async (req, res) => {
       console.log(err)
     }
     if(contact == 'no existe') {
-      console.log('No existe bro, creando...')
       var es_cliente 
       if(nombre_contacto.startsWith("AA")) {
         es_cliente = true
@@ -287,8 +270,6 @@ exports.saveMsg = async (req, res) => {
       });
 
     } 
-      
-    
   });
 
 
