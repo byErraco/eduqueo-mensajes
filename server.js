@@ -39,9 +39,17 @@ const bree = new Bree({
   jobs : [
     // // runs the job on Start
     {
+      
       name : 'metrics', //create metrics for the database in airtable
-      // interval : '20s' //run the script after 200 seconds from the start
-      interval: 'on the last day of the month'
+      // cron: '0 12 * * MON',
+      // cronValidate: {
+      //   override: {
+      //     useBlankDay: true
+      //   }
+      // }
+      // interval: 'on the last day of the month'
+      // interval: '20s'
+      interval: 'at 12:00 pm on Monday'
     },
     {
       name : 'sample', //send msg between 30 and 60 days
@@ -50,14 +58,15 @@ const bree = new Bree({
     {
       name : 'sampletwo', // create sesion info for clients in airtable
       interval : '20m' //run the script after 30 seconds from the start
+      // interval : '20s' //run the script after 30 seconds from the start
     }
   ]
 })
 bree.start()
 
-setInterval(function() {
-  http.get("http://estudiar-hoy-api.herokuapp.com/");
-}, 300000 * 6); // every 5 minutes (300000)
+// setInterval(function() {
+//   http.get("http://estudiar-hoy-api.herokuapp.com/");
+// }, 300000 * 6); // every 5 minutes (300000)
 
 
 // set port, listen for requests
