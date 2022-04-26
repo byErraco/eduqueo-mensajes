@@ -53,12 +53,18 @@ const createRecord = async (fields) => {
 
         function createMetrics(metric) {
           return new Promise((resolve, reject) => {
-            var hoy = new Date()
+            // var hoy = new Date()
+            function subtractHours(numOfHours, date = new Date()) {
+              date.setHours(date.getHours() - numOfHours);
+            
+              return date;
+            }
+            const resultUTCtoArg = subtractHours(3);
             var telefonoData = {
               cantidad_mensajes: metric.length,
               cantidad_caracteres: 0,
               id_telefono: metric[0].id_celular,
-              fecha: hoy,
+              fecha: resultUTCtoArg,
               // fecha: hoy.toISOString(),
             }
             for(let msgData of metric) {
