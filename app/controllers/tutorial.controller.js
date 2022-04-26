@@ -3,11 +3,14 @@ const Sesion = require("../models/sesion.model.js");
 
 
 const Airtable = require('airtable');
-
-const base = new Airtable({ apiKey: 'keyaSZubvuicnMRyO' }).base(
-  // 'appqvc1jKHBIRRbSy'
-  'app5VPWEzWCR4bUbe'
+//prod
+const base = new Airtable({ apiKey: 'keychMsGE74MU7aPW' }).base(
+  'appLozC8HlQpY5OGi'
 );
+//dev
+// const base = new Airtable({ apiKey: 'keyaSZubvuicnMRyO' }).base(
+//   'app5VPWEzWCR4bUbe'
+// );
 const tabletest = base('PricelistNob2021');
 
 const tablaSesiones = base('Sesiones');
@@ -105,7 +108,8 @@ exports.airtableMensajes = async (req,res) => {
             var now = new Date();
             var utc = new Date(now.getTime() + now.getTimezoneOffset() * 60000);
             //update contact in the db (amount of interactions and last date of interaction)
-            Sesion.updateContactInteractionByName(cliente.clienteNombre,utc, async (err, contactoUpdateado) => {
+            var type =
+            Sesion.updateContactInteractionByNameNoType(cliente.clienteNombre,utc, async (err, contactoUpdateado) => {
               if (err) {
                 console.log('Hubo un error actualizando la ultima interaccion')
               } else {

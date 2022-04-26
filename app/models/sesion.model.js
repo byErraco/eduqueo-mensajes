@@ -31,96 +31,6 @@ Sesion.findById = (id, result) => {
   });
 };
 
-// Sesion.getAll = (title, result) => {
-//   let query = "SELECT * FROM mensajes";
-//   // let query = "SELECT * FROM tutorials";
-
-//   if (title) {
-//     query += ` WHERE title LIKE '%${title}%'`;
-//   }
-
-//   sql.query(query, (err, res) => {
-//     if (err) {
-//       console.log("error: ", err);
-//       result(null, err);
-//       return;
-//     }
-
-//     console.log("tutorials: ", res);
-//     result(null, res);
-//   });
-// };
-
-Sesion.getAllPublished = result => {
-  sql.query("SELECT * FROM tutorials WHERE published=true", (err, res) => {
-    if (err) {
-      console.log("error: ", err);
-      result(null, err);
-      return;
-    }
-
-    console.log("tutorials: ", res);
-    result(null, res);
-  });
-};
-
-Sesion.updateById = (id, tutorial, result) => {
-  sql.query(
-    "UPDATE tutorials SET title = ?, description = ?, published = ? WHERE id = ?",
-    [tutorial.title, tutorial.description, tutorial.published, id],
-    (err, res) => {
-      if (err) {
-        console.log("error: ", err);
-        result(null, err);
-        return;
-      }
-
-      if (res.affectedRows == 0) {
-        // not found Tutorial with the id
-        result({ kind: "not_found" }, null);
-        return;
-      }
-
-      console.log("updated tutorial: ", { id: id, ...tutorial });
-      result(null, { id: id, ...tutorial });
-    }
-  );
-};
-
-Sesion.remove = (id, result) => {
-  sql.query("DELETE FROM tutorials WHERE id = ?", id, (err, res) => {
-    if (err) {
-      console.log("error: ", err);
-      result(null, err);
-      return;
-    }
-
-    if (res.affectedRows == 0) {
-      // not found Tutorial with the id
-      result({ kind: "not_found" }, null);
-      return;
-    }
-
-    console.log("deleted tutorial with id: ", id);
-    result(null, res);
-  });
-};
-
-Sesion.removeAll = result => {
-  sql.query("DELETE FROM tutorials", (err, res) => {
-    if (err) {
-      console.log("error: ", err);
-      result(null, err);
-      return;
-    }
-
-    console.log(`deleted ${res.affectedRows} tutorials`);
-    result(null, res);
-  });
-};
-
-
-
 Sesion.create = (newSession, result) => {
   sql.query("INSERT INTO sesiones SET ?", newSession, (err, res) => {
     if (err) {
@@ -277,11 +187,36 @@ Sesion.updateContactInteraction = (id, contact, result) => {
     }
   );
 };
-Sesion.updateContactInteractionByName = (name, date, result) => {
+Sesion.updateContactInteractionByName = (name, date,type, result) => {
+  sql.query(
+    `UPDATE contactos SET fecha_ultimo_mensaje_masivo_enviado = ?, cantidad_interacciones = cantidad_interacciones + ?, ${type} = ? WHERE nombre = ?`,
+    // `UPDATE contactos SET fecha_ultima_interaccion = ?,fecha_ultimo_mensaje_masivo_enviado = ?, cantidad_interacciones = cantidad_interacciones + ? WHERE nombre = ?`,
+    [date, 1,1,name],
+    // [date,date, 1,name],
+    (err, resData) => {
+      if (err) {
+        console.log("error: ", err);
+        result(null, err);
+        return;
+      }
+
+      if (resData.affectedRows == 0) {
+        // not found contact with the id
+        result({ kind: "not_found" }, null);
+        return;
+      }
+      // console.log(resData)
+      // console.log("updated contact: ", { id: id, ...contact,resData });
+      // result(null, { id:id, ...contact });
+      result(null, { resData });
+    }
+  );
+};
+Sesion.updateContactInteractionByNameNoType = (name, date, result) => {
   sql.query(
     `UPDATE contactos SET fecha_ultimo_mensaje_masivo_enviado = ?, cantidad_interacciones = cantidad_interacciones + ? WHERE nombre = ?`,
     // `UPDATE contactos SET fecha_ultima_interaccion = ?,fecha_ultimo_mensaje_masivo_enviado = ?, cantidad_interacciones = cantidad_interacciones + ? WHERE nombre = ?`,
-    [date, 1,name],
+    [date, 1,1,name],
     // [date,date, 1,name],
     (err, resData) => {
       if (err) {

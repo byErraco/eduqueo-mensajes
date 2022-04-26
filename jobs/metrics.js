@@ -9,10 +9,14 @@ const mostFrequent = (array) => {
 }
 //airtable
 const Airtable = require('airtable');
-const base = new Airtable({ apiKey: 'keyaSZubvuicnMRyO' }).base(
-  // 'appqvc1jKHBIRRbSy'
-  'app5VPWEzWCR4bUbe'
+//prod
+const base = new Airtable({ apiKey: 'keychMsGE74MU7aPW' }).base(
+  'appLozC8HlQpY5OGi'
 );
+//dev
+// const base = new Airtable({ apiKey: 'keyaSZubvuicnMRyO' }).base(
+//   'app5VPWEzWCR4bUbe'
+// );
 const tablaMetricas = base('Metrics');
 // const tablaSesiones = base('Metricas');
 const minifyRecord = (record) => {

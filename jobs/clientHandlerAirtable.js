@@ -3,11 +3,14 @@ const axios = require("axios");
 const Sesion = require("../app/models/sesion.model");
 const Airtable = require('airtable');
 const { parentPort } = require('worker_threads');
-
-const base = new Airtable({ apiKey: 'keyaSZubvuicnMRyO' }).base(
-  // 'appqvc1jKHBIRRbSy'
-  'app5VPWEzWCR4bUbe'
+//prod
+const base = new Airtable({ apiKey: 'keyaes1DV3xwLUi0b' }).base(
+  'appLozC8HlQpY5OGi'
 );
+//dev
+// const base = new Airtable({ apiKey: 'keyaSZubvuicnMRyO' }).base(
+//   'app5VPWEzWCR4bUbe'
+// );
 const tablaSesiones = base('Sesiones');
 
 //airtable
@@ -96,11 +99,20 @@ const getRecordByField = async (field, result) => {
                     console.log('error')
                   }
                   if(resultRecord) {
-                      await updateRecord(resultRecord.id, sesion)
+                      try {
+                        await updateRecord(resultRecord.id, sesion)
                       resolve()
+                      } catch (error) {
+                        console.log(error)
+                        
+                      }
                   } else {
-                      await createRecord(sesion)
-                      resolve()
+                      try {
+                        await createRecord(sesion)
+                        resolve()
+                      } catch (error) {
+                        console.log(error)
+                      }
                   }
                 })  
               }
