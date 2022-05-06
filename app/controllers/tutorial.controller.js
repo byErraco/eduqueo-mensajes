@@ -68,7 +68,7 @@ const getRecordByField = async (field, result) => {
 exports.airtableMensajes = async (req,res) => {
 
   const arrClientes = req.body.arr
-  const mensaje = req.body.mensaje
+  // const mensaje = req.body.mensaje
 
   console.log(arrClientes)
   console.log(mensaje)
@@ -97,7 +97,8 @@ exports.airtableMensajes = async (req,res) => {
       }
       let body = {
               "name": cliente.clienteNombre,
-              "message": mensaje,
+              "message": cliente.texto,
+              // "message": mensaje,
           }
 
           function subtractHours(numOfHours, date = new Date()) {
@@ -151,7 +152,7 @@ exports.airtableMensajes = async (req,res) => {
           .catch(error => console.log('error', error));
           console.log('Enviando a tasker...')
 
-    }, i * 20000);
+    }, i * 60000);
   });
 
 
@@ -215,7 +216,8 @@ exports.saveMsg = async (req, res) => {
       const nuevoContacto = new Sesion({
         fecha_primera_interaccion: resultUTCtoArg,
         fecha_ultima_interaccion: resultUTCtoArg,
-        fecha_ultimo_mensaje_masivo_enviado: resultUTCtoArg,
+        fecha_ultimo_mensaje_masivo_enviado: "",
+        // fecha_ultimo_mensaje_masivo_enviado: resultUTCtoArg,
         nombre: nombre_contacto,
         es_cliente: es_cliente,
         // es_cliente: req.body.es_cliente || false,

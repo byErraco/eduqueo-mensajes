@@ -11,7 +11,7 @@ const { parentPort } = require('worker_threads');
         console.log(err)
       } else {
 
-        var interval = 20000; // how much time should the delay between two iterations be (in milliseconds)?
+        var interval = 60000; // how much time should the delay between two iterations be (in milliseconds)?
         var promise = Promise.resolve();
         data.forEach(function (value) {
           promise = promise.then(function () {
