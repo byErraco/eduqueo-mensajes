@@ -105,7 +105,8 @@ exports.airtableMensajes = async (req,res) => {
           
             return date;
           }
-          const resultUTCtoArg = subtractHours(3);
+          var resultUTCtoArg = subtractHours(3);
+          resultUTCtoArg = resultUTCtoArg.toISOString()
       
           console.log(body)
         fetch(`https://joinjoaomgcd.appspot.com/_ah/api/messaging/v1/sendPush?apikey=${apiKey}&text=${encodeURIComponent(JSON.stringify(body))}&title=${scriptName}&deviceId=${deviceId}`, requestOptions)
