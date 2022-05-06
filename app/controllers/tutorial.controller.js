@@ -130,7 +130,7 @@ exports.airtableMensajes = async (req,res) => {
                     console.log('error')
                   }
                     const sesion = {
-                      fecha_ultimo_mensaje_masivo_enviado: utc,
+                      fecha_ultimo_mensaje_masivo_enviado: resultUTCtoArg,
                       
                       // fecha_ultimo_mensaje_masivo_enviado: now,
                       // fecha_ultimo_mensaje_masivo_enviado: utc,
