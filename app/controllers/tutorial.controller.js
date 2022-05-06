@@ -71,7 +71,7 @@ exports.airtableMensajes = async (req,res) => {
   // const mensaje = req.body.mensaje
 
   console.log(arrClientes)
-  console.log(mensaje)
+  
 
   let apiKey = ''
   let deviceId = ''
