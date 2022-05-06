@@ -119,7 +119,7 @@ exports.airtableMensajes = async (req,res) => {
             console.log(`Mensaje enviado aprox a las ${resultUTCtoArg}`)
             //update contact in the db (amount of interactions and last date of interaction)
            
-            Sesion.updateContactInteractionByNameNoType(cliente.clienteNombre,resultUTCtoArg, async (err, contactoUpdateado) => {
+            Sesion.updateContactInteractionByNameNoType(cliente.clienteNombre,utc, async (err, contactoUpdateado) => {
               if (err) {
                 console.log('Hubo un error actualizando la ultima interaccion')
               } else {
@@ -129,7 +129,7 @@ exports.airtableMensajes = async (req,res) => {
                     console.log('error')
                   }
                     const sesion = {
-                      fecha_ultimo_mensaje_masivo_enviado: resultUTCtoArg,
+                      fecha_ultimo_mensaje_masivo_enviado: utc,
                       
                       // fecha_ultimo_mensaje_masivo_enviado: now,
                       // fecha_ultimo_mensaje_masivo_enviado: utc,
