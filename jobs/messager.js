@@ -25,6 +25,8 @@ const { parentPort } = require('worker_threads');
               return date;
             }
             const resultUTCtoArg = subtractHours(3);
+            var utc = new Date(now.getTime() + now.getTimezoneOffset() * 60000);
+
 
             if(value.segundo_auto_mesaje_masivo_enviado == '0'){
               if(value.auto_mensaje_masivo_enviado == '1') {
@@ -62,7 +64,7 @@ const { parentPort } = require('worker_threads');
                       .then(response => response.text())
                       .then(result => {
                         var type = 'segundo_auto_mesaje_masivo_enviado'
-                        Sesion.updateContactInteractionByName(value.nombre,resultUTCtoArg,type, async (err, contactoUpdateado) => {
+                        Sesion.updateContactInteractionByName(value.nombre,utc,type, async (err, contactoUpdateado) => {
                           if (err) {
                             console.log('Hubo un error actualizando la ultima interaccion')
                           } else {
@@ -72,8 +74,9 @@ const { parentPort } = require('worker_threads');
                                 // console.log(err)
                                 console.log('error')
                               }
+                              var dateAirtable = utc.toLocaleDateString('en-US')
                                 const sesion = {
-                                  fecha_ultimo_mensaje_masivo_enviado: now,
+                                  fecha_ultimo_mensaje_masivo_enviado: dateAirtable,
                                 };
                                 console.log('acutalizando record')
                                 console.log(resultRecord)
@@ -121,7 +124,7 @@ const { parentPort } = require('worker_threads');
                       .then(response => response.text())
                       .then(result => {
                         var type = 'auto_mensaje_masivo_enviado'
-                        Sesion.updateContactInteractionByName(value.nombre,resultUTCtoArg,type, async (err, contactoUpdateado) => {
+                        Sesion.updateContactInteractionByName(value.nombre,utc,type, async (err, contactoUpdateado) => {
                           if (err) {
                             console.log('Hubo un error actualizando la ultima interaccion')
                           } else {
@@ -131,8 +134,9 @@ const { parentPort } = require('worker_threads');
                                 // console.log(err)
                                 console.log('error')
                               }
+                              var dateAirtable = utc.toLocaleDateString('en-US')
                                 const sesion = {
-                                  fecha_ultimo_mensaje_masivo_enviado: resultUTCtoArg,
+                                  fecha_ultimo_mensaje_masivo_enviado: dateAirtable,
                                 };
                                 console.log('acutalizando record')
                                 console.log(resultRecord)

@@ -83,12 +83,14 @@ const getRecordByField = async (field, result) => {
 
                 var sesion 
                 if( obj.fecha_ultimo_mensaje_masivo_enviado == null) {
+                  
+                  // var dateAirtable = utc.toLocaleDateString('en-US')
                   sesion = {
                     nombre_unico: `${obj.nombre}`,
                     asesor_id: obj.asesor_id,
                     // nombre_unico: `${value.nombre}-${value.id}`,
-                    contacto_inicio: obj.fecha_primera_interaccion,
-                    ultimo_mensaje_recibido: obj.fecha_ultima_interaccion,
+                    contacto_inicio: obj.fecha_primera_interaccion.toLocaleDateString('en-US'),
+                    ultimo_mensaje_recibido: obj.fecha_ultima_interaccion.toLocaleDateString('en-US'),
                     // ultimo_contacto: obj.fecha_ultima_interaccion,
                     // fecha_ultimo_mensaje_masivo_enviado: obj.fecha_ultimo_mensaje_masivo_enviado,
                     cantidad_interacciones: dataMsg.length,
@@ -100,10 +102,10 @@ const getRecordByField = async (field, result) => {
                     nombre_unico: `${obj.nombre}`,
                     asesor_id: obj.asesor_id,
                     // nombre_unico: `${value.nombre}-${value.id}`,
-                    contacto_inicio: obj.fecha_primera_interaccion,
-                    ultimo_mensaje_recibido: obj.fecha_ultima_interaccion,
+                    contacto_inicio: obj.fecha_primera_interaccion.toLocaleDateString('en-US'),
+                    ultimo_mensaje_recibido: obj.fecha_ultima_interaccion.toLocaleDateString('en-US'),
                     // ultimo_contacto: obj.fecha_ultima_interaccion,
-                    fecha_ultimo_mensaje_masivo_enviado: obj.fecha_ultimo_mensaje_masivo_enviado,
+                    fecha_ultimo_mensaje_masivo_enviado: obj.fecha_ultimo_mensaje_masivo_enviado.toLocaleDateString('en-US'),
                     cantidad_interacciones: dataMsg.length,
                     cliente: es_cliente
                     // cliente: obj.es_cliente == 0 ? false : true
