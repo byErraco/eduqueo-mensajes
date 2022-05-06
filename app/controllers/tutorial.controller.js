@@ -101,13 +101,13 @@ exports.airtableMensajes = async (req,res) => {
               // "message": mensaje,
           }
 
-          function subtractHours(numOfHours, date = new Date()) {
-            date.setHours(date.getHours() - numOfHours);
+          // function subtractHours(numOfHours, date = new Date()) {
+          //   date.setHours(date.getHours() - numOfHours);
           
-            return date;
-          }
-          var resultUTCtoArg = subtractHours(3);
-          resultUTCtoArg = resultUTCtoArg.toISOString()
+          //   return date;
+          // }
+          // var resultUTCtoArg = subtractHours(3);
+          // resultUTCtoArg = resultUTCtoArg.toISOString()
       
           console.log(body)
         fetch(`https://joinjoaomgcd.appspot.com/_ah/api/messaging/v1/sendPush?apikey=${apiKey}&text=${encodeURIComponent(JSON.stringify(body))}&title=${scriptName}&deviceId=${deviceId}`, requestOptions)
@@ -118,6 +118,7 @@ exports.airtableMensajes = async (req,res) => {
             var now = new Date();
             var utc = new Date(now.getTime() + now.getTimezoneOffset() * 60000);
             console.log(`Mensaje enviado aprox a las ${resultUTCtoArg}`)
+            var dateAirtable = utc.toLocaleDateString('en-US')
             //update contact in the db (amount of interactions and last date of interaction)
            
             Sesion.updateContactInteractionByNameNoType(cliente.clienteNombre,utc, async (err, contactoUpdateado) => {
@@ -130,7 +131,7 @@ exports.airtableMensajes = async (req,res) => {
                     console.log('error')
                   }
                     const sesion = {
-                      fecha_ultimo_mensaje_masivo_enviado: resultUTCtoArg,
+                      fecha_ultimo_mensaje_masivo_enviado: dateAirtable,
                       
                       // fecha_ultimo_mensaje_masivo_enviado: now,
                       // fecha_ultimo_mensaje_masivo_enviado: utc,
@@ -196,7 +197,7 @@ exports.saveMsg = async (req, res) => {
   
     return date;
   }
-  const resultUTCtoArg = subtractHours(-4);
+  const resultUTCtoArg = subtractHours(3);
 
   console.log(`mensaje recibdo hora: ${resultUTCtoArg}`)
 
