@@ -117,7 +117,7 @@ exports.airtableMensajes = async (req,res) => {
             console.log(result)
             var now = new Date();
             var utc = new Date(now.getTime() + now.getTimezoneOffset() * 60000);
-            console.log(`Mensaje enviado aprox a las ${resultUTCtoArg}`)
+            // console.log(`Mensaje enviado aprox a las ${resultUTCtoArg}`)
             var dateAirtable = utc.toLocaleDateString('en-US')
             //update contact in the db (amount of interactions and last date of interaction)
            
