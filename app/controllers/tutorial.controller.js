@@ -216,7 +216,7 @@ exports.saveMsg = async (req, res) => {
       const nuevoContacto = new Sesion({
         fecha_primera_interaccion: resultUTCtoArg,
         fecha_ultima_interaccion: resultUTCtoArg,
-        fecha_ultimo_mensaje_masivo_enviado: "",
+        fecha_ultimo_mensaje_masivo_enviado: null,
         // fecha_ultimo_mensaje_masivo_enviado: resultUTCtoArg,
         nombre: nombre_contacto,
         es_cliente: es_cliente,
