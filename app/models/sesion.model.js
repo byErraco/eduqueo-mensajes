@@ -239,8 +239,73 @@ Sesion.updateContactInteractionByNameNoType = (name, date, result) => {
 };
 
 
+Sesion.updateFilterById = (id, nombre, result) => {
+  sql.query(
+    "UPDATE filtros SET nombre = ? WHERE id = ?",
+    [nombre, id],
+    (err, resData) => {
+      if (err) {
+        console.log("error: ", err);
+        result(null, err);
+        return;
+      }
+
+      if (resData.affectedRows == 0) {
+        // not found contact with the id
+        result({ kind: "not_found" }, null);
+        return;
+      }
+      // console.log(resData)
+      // console.log("updated contact: ", { id: id, ...contact,resData });
+      result(null, { id:id, ...resData });
+    }
+  );
+};
 
 
+Sesion.findFilterById = (id, result) => {
+  sql.query(`SELECT * FROM filtros WHERE id = ${id}`, (err, res) => {
+    if (err) {
+      console.log("error: ", err);
+      result(err, null);
+      return;
+    }
 
+    if (res.length) {
+      console.log("found filter: ", res[0]);
+      result(null, res[0]);
+      return;
+    }
+
+    // not found Tutorial with the id
+    result({ kind: "not_found" }, null);
+  });
+};
+
+Sesion.createFiltro = (filtro, result) => {
+  sql.query("INSERT INTO filtros SET ?", filtro, (err, res) => {
+    if (err) {
+      console.log("error: ", err);
+      result(err, null);
+      return;
+    }
+    console.log("created msg: ", { id: res.insertId, ...filtro });
+    result(null, { id: res.insertId, ...filtro });
+  });
+};
+
+Sesion.getAllFiltros = (result) => {
+  let query = "SELECT * FROM filtros";
+  // let query = "SELECT * FROM tutorials";
+  sql.query(query, (err, res) => {
+    if (err) {
+      console.log("error: ", err);
+      result(null, err);
+      return;
+    }
+    // console.log("tutorials: ", res);
+    result(null, res);
+  });
+};
 
 module.exports = Sesion;

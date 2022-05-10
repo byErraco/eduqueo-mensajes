@@ -155,9 +155,6 @@ exports.airtableMensajes = async (req,res) => {
 
     }, i * 60000);
   });
-
-
-
   res.status(200).send('Recibido')
 }
 
@@ -172,136 +169,200 @@ exports.saveMsg = async (req, res) => {
     return
   }
   const {nombre_contacto} = req.body
-  if (nombre_contacto.includes('Equipo Eduqueo')) {
-    console.log( "Equipo eduqueo no aceptado!")
-    res.status(400).send({
-      message: "Equipo eduqueo no aceptado!"
-    });
-    return
-  }
-  const regexExp = /(\u00a9|\u00ae|[\u2000-\u3300]|\ud83c[\ud000-\udfff]|\ud83d[\ud000-\udfff]|\ud83e[\ud000-\udfff])/gi;
-  if (regexExp.test(nombre_contacto)) {
-    console.log("No se aceptan contactos con emojis!")
-    res.status(400).send({
-      message: "No se aceptan contactos con emojis!"
-    });
-    return
-  }
-  console.log(req.body)
-
-  var now = new Date();
-  var utc = new Date(now.getTime() + now.getTimezoneOffset() * 60000);
-
-  function subtractHours(numOfHours, date = new Date()) {
-    date.setHours(date.getHours() - numOfHours);
-  
-    return date;
-  }
-  const resultUTCtoArg = subtractHours(3);
-
-  console.log(`mensaje recibdo hora: ${resultUTCtoArg}`)
-
-  Sesion.getContactByName(nombre_contacto, async (err, contact) => {
+  Sesion.getAllFiltros(async (err, filtros) => {
     if (err) {
       console.log(err)
-    }
-    if(contact == 'no existe') {
-      var es_cliente 
-      if(nombre_contacto.startsWith("AA")) {
-        es_cliente = true
-      } else {
-        es_cliente = false
-      }
-
-
-      const nuevoContacto = new Sesion({
-        fecha_primera_interaccion: resultUTCtoArg,
-        fecha_ultima_interaccion: resultUTCtoArg,
-        fecha_ultimo_mensaje_masivo_enviado: null,
-        // fecha_ultimo_mensaje_masivo_enviado: resultUTCtoArg,
-        nombre: nombre_contacto,
-        es_cliente: es_cliente,
-        // es_cliente: req.body.es_cliente || false,
-        cantidad_interacciones: 1,
-        asesor_id: req.body.asesor_id
-      });
-        // Save Contact in the database
-      Sesion.createContact(nuevoContacto, async (err, contactoCreado) => {
-        if (err)
-          res.status(500).send({
-            message:
-              err.message || "Some error occurred while creating the contact."
-          });
-        else {
-          console.log('Nuevo contacto!')
-          console.log(contactoCreado)
-          console.log('Saving mensaje!')
-          const newMsg = {
-            id_celular: req.body.asesor_id,
-            mensaje: req.body.mensaje,
-            id_contacto: contactoCreado.id,
-            fecha:resultUTCtoArg
-          };
-          Sesion.createMensaje(newMsg, async (err, mensajeCreado) => {
-            if (err)
-              res.status(500).send({
-                message:
-                  err.message || "Some error occurred while saving the msg."
-              });
-            else {
-              console.log('Nuevo Msg!')
-              console.log(mensajeCreado)
-              res.send('Mensaje Creado!')
-            }
-          });
-        }
-      });
     } else {
-      console.log('vamos a updatear a')
-      console.log(contact[0])
-      var es_cliente 
-      if(nombre_contacto.startsWith("AA")) {
-        es_cliente = true
-      } else {
-        es_cliente = false
+      console.log(filtros)
+      for (const filtro of filtros) {
+        if (nombre_contacto.includes(filtro.nombre)) {
+          console.log(`${filtro.nombre} no aceptado!`)
+        res.status(400).send({
+          message: `${filtro.nombre} no aceptado!`
+        });
+        return
+        }
+      }  
+      // if (nombre_contacto.includes('Equipo Eduqueo')) {
+      //   console.log( "Equipo eduqueo no aceptado!")
+      //   res.status(400).send({
+      //     message: "Equipo eduqueo no aceptado!"
+      //   });
+      //   return
+      // }
+      const regexExp = /(\u00a9|\u00ae|[\u2000-\u3300]|\ud83c[\ud000-\udfff]|\ud83d[\ud000-\udfff]|\ud83e[\ud000-\udfff])/gi;
+      if (regexExp.test(nombre_contacto)) {
+        console.log("No se aceptan contactos con emojis!")
+        res.status(400).send({
+          message: "No se aceptan contactos con emojis!"
+        });
+        return
       }
-      const updateContacto = new Sesion({
-        fecha_ultima_interaccion: utc,
-        cantidad_interacciones: 1,
-        es_cliente: es_cliente,
-      });
-      //update contact in the db (amount of interactions and last date of interaction)
-      Sesion.updateContactInteraction(contact[0].id,updateContacto, async (err, contactoUpdateado) => {
-        if (err)
-          res.status(500).send({
-            message:
-              err.message || "Some error occurred while updating the contact."
+      console.log(req.body)
+
+      var now = new Date();
+      var utc = new Date(now.getTime() + now.getTimezoneOffset() * 60000);
+
+      function subtractHours(numOfHours, date = new Date()) {
+        date.setHours(date.getHours() - numOfHours);
+
+        return date;
+      }
+      const resultUTCtoArg = subtractHours(3);
+
+      console.log(`mensaje recibdo hora: ${resultUTCtoArg}`)
+
+      Sesion.getContactByName(nombre_contacto, async (err, contact) => {
+        if (err) {
+          console.log(err)
+        }
+        if(contact == 'no existe') {
+          var es_cliente 
+          if(nombre_contacto.startsWith("AA")) {
+            es_cliente = true
+          } else {
+            es_cliente = false
+          }
+
+
+          const nuevoContacto = new Sesion({
+            fecha_primera_interaccion: resultUTCtoArg,
+            fecha_ultima_interaccion: resultUTCtoArg,
+            fecha_ultimo_mensaje_masivo_enviado: null,
+            // fecha_ultimo_mensaje_masivo_enviado: resultUTCtoArg,
+            nombre: nombre_contacto,
+            es_cliente: es_cliente,
+            // es_cliente: req.body.es_cliente || false,
+            cantidad_interacciones: 1,
+            asesor_id: req.body.asesor_id
           });
-        else {
-          console.log('Contacto updateado!')
-          console.log('Saving mensaje!')
-          const newMsg = {
-            id_celular: req.body.asesor_id,
-            mensaje: req.body.mensaje,
-            id_contacto: contact[0].id,
-            fecha:resultUTCtoArg
-          };
-          Sesion.createMensaje(newMsg, async (err, mensajeCreado) => {
+            // Save Contact in the database
+          Sesion.createContact(nuevoContacto, async (err, contactoCreado) => {
             if (err)
               res.status(500).send({
                 message:
-                  err.message || "Some error occurred while saving the msg."
+                  err.message || "Some error occurred while creating the contact."
               });
             else {
-              console.log('Nuevo Msg!')
-              console.log(mensajeCreado)
-              res.send('Mensaje Creado!')
+              console.log('Nuevo contacto!')
+              console.log(contactoCreado)
+              console.log('Saving mensaje!')
+              const newMsg = {
+                id_celular: req.body.asesor_id,
+                mensaje: req.body.mensaje,
+                id_contacto: contactoCreado.id,
+                fecha:resultUTCtoArg
+              };
+              Sesion.createMensaje(newMsg, async (err, mensajeCreado) => {
+                if (err)
+                  res.status(500).send({
+                    message:
+                      err.message || "Some error occurred while saving the msg."
+                  });
+                else {
+                  console.log('Nuevo Msg!')
+                  console.log(mensajeCreado)
+                  res.send('Mensaje Creado!')
+                }
+              });
+            }
+          });
+          } else {
+            var es_cliente 
+            if(nombre_contacto.startsWith("AA")) {
+              es_cliente = true
+            } else {
+              es_cliente = false
+            }
+            const updateContacto = new Sesion({
+              fecha_ultima_interaccion: utc,
+              cantidad_interacciones: 1,
+              es_cliente: es_cliente,
+            });
+            //update contact in the db (amount of interactions and last date of interaction)
+            Sesion.updateContactInteraction(contact[0].id,updateContacto, async (err, contactoUpdateado) => {
+              if (err)
+                res.status(500).send({
+                  message:
+                    err.message || "Some error occurred while updating the contact."
+                });
+              else {
+                console.log('Contacto updateado!')
+                console.log('Saving mensaje!')
+                const newMsg = {
+                  id_celular: req.body.asesor_id,
+                  mensaje: req.body.mensaje,
+                  id_contacto: contact[0].id,
+                  fecha:resultUTCtoArg
+                };
+                Sesion.createMensaje(newMsg, async (err, mensajeCreado) => {
+                  if (err)
+                    res.status(500).send({
+                      message:
+                        err.message || "Some error occurred while saving the msg."
+                    });
+                  else {
+                    console.log('Nuevo Msg!')
+                    console.log(mensajeCreado)
+                    res.send('Mensaje Creado!')
+                  }
+                });
+              }
+            });
+          } 
+        });
+    }
+  });
+
+
+};
+
+exports.addFilter = async (req, res) => {
+
+//  let filtros = [{'id':1,'nombre':'estp es un test'},{'id':2,'nombre':'esto es un test'}]
+//  let filtros = []
+ let filtros = req.body.filtros
+
+  if(Array.isArray(filtros) && filtros.length ? false : true) {
+    res.status(400).send({
+      message: "Content can not be empty!"
+    });
+    return
+  } 
+
+  const update = await Promise.all(filtros.map( async (filtro) => {
+    Sesion.findFilterById(filtro.id, async (err, foundFiltro) => {
+      if (err) {
+        if (err.kind === 'not_found'){
+          const nuevoFiltro = {
+            nombre: filtro.nombre,
+            id:filtro.id
+          };
+          Sesion.createFiltro(nuevoFiltro, async (err, filtroCreado) => {
+            if (err){
+              console.log(err)
+            }
+            else {
+              console.log('Nuevo Filtro!')
             }
           });
         }
-      });
+      } else {
+        Sesion.updateFilterById(filtro.id,filtro.nombre, async (err, filtroUpdated) => {
+          if (err){
+            console.log(err)
+          }   else {
+            console.log('Filtro updateado!')
+          }
+       
+        });
+      }
+    });
+  }))
+  console.log('ok!')
 
-    } 
+  res.status(200).send({
+    message: "All ok!"
   });
 
 
