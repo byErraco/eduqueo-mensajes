@@ -84,12 +84,19 @@ exports.airtableMensajes = async (req,res) => {
   arrClientes.forEach((cliente, i) => {
     setTimeout(() => {
       if(cliente.asesorId === "1") {
+        //ambrosia
+        console.log('ambrosia')
+        apiKey = '169ab9e615844a4a8eb568684e679243'
+        deviceId = 'dc870804ed09496bb86ec9c7be6dc3ff'
+      }
+      
+      if(cliente.asesorId === "2") {
         //benedicto
         console.log('benedicto')
         apiKey = '169ab9e615844a4a8eb568684e679243'
         deviceId = 'dc870804ed09496bb86ec9c7be6dc3ff'
       }
-      if(cliente.asesorId === '2') {
+      if(cliente.asesorId === '3') {
         //ebano
         console.log('ebano')
         apiKey = '10896fe04b7143189be93d6a47b85805'
