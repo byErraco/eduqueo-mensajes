@@ -307,5 +307,42 @@ Sesion.getAllFiltros = (result) => {
     result(null, res);
   });
 };
+Sesion.getAllMensajeAutomatico = (result) => {
+  let query = "SELECT * FROM mensaje_automatico";
+  // let query = "SELECT * FROM tutorials";
+  sql.query(query, (err, res) => {
+    if (err) {
+      console.log("error: ", err);
+      result(null, err);
+      return;
+    }
+    // console.log("tutorials: ", res);
+    result(null, res);
+  });
+};
+
+Sesion.updateMensajeAutomaticoById = (id, mensaje, result) => {
+  sql.query(
+    "UPDATE mensaje_automatico SET mensaje = ? WHERE id = ?",
+    [mensaje, id],
+    (err, resData) => {
+      if (err) {
+        console.log("error: ", err);
+        result(null, err);
+        return;
+      }
+
+      if (resData.affectedRows == 0) {
+        // not found contact with the id
+        result({ kind: "not_found" }, null);
+        return;
+      }
+      // console.log(resData)
+      // console.log("updated contact: ", { id: id, ...contact,resData });
+      result(null, { id:id, ...resData });
+    }
+  );
+};
+
 
 module.exports = Sesion;

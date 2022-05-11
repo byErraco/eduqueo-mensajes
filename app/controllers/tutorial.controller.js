@@ -359,10 +359,30 @@ exports.addFilter = async (req, res) => {
       }
     });
   }))
-  console.log('ok!')
-
   res.status(200).send({
     message: "All ok!"
+  });
+
+};
+exports.updateMensajeAutomatico = async (req, res) => {
+
+  let mensaje = req.body.mensaje
+
+  Sesion.getAllMensajeAutomatico( async (err, foundMsg) => {
+    if (err) {
+      console.log(err)
+    } else {
+      Sesion.updateMensajeAutomaticoById(foundMsg[0].id,mensaje, async (err, mensajeActualizado) => {
+        if (err){
+          console.log(err)
+        }   else {
+          console.log('Filtro updateado!')
+          res.status(200).send({
+            message: "Actualizado!"
+          });
+        }
+      });
+    }
   });
 
 
