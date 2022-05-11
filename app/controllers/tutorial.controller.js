@@ -367,7 +367,6 @@ exports.addFilter = async (req, res) => {
 exports.updateMensajeAutomatico = async (req, res) => {
 
   let mensaje = req.body.mensaje
-
   Sesion.getAllMensajeAutomatico( async (err, foundMsg) => {
     if (err) {
       console.log(err)
@@ -376,7 +375,7 @@ exports.updateMensajeAutomatico = async (req, res) => {
         if (err){
           console.log(err)
         }   else {
-          console.log('Filtro updateado!')
+          console.log('Mensaje Masivo automatico actualizado!')
           res.status(200).send({
             message: "Actualizado!"
           });
