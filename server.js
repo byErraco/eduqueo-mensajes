@@ -42,13 +42,15 @@ const bree = new Bree({
       name : 'metrics', //create metrics for the database in airtable
       interval: 'at 12:00 pm on Monday'
     },
-    {
-      name : 'messager', //send msg between 30 and 60 days
-      interval : 'at 16:00 pm' //run the script after 200 seconds from the start
-    },
+    // {
+    //   name : 'messager', //send msg between 30 and 60 days
+    //   // interval : '30s' //run the script after 200 seconds from the start
+    //   interval : 'at 16:00 pm' //run the script after 200 seconds from the start
+    // },
     {
       name : 'clientHandlerAirtable', // create sesion info for clients in airtable
       cron : '*/20 12-20 * * *' //run the script after 30 seconds from the start
+      // interval : '60s' //run the script after 200 seconds from the start
       // interval : '20m' //run the script after 30 seconds from the start
     }
   ]
