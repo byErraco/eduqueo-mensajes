@@ -176,6 +176,7 @@ exports.saveMsg = async (req, res) => {
     return
   }
   const {nombre_contacto} = req.body
+  console.log(nombre_contacto)
   Sesion.getAllFiltros(async (err, filtros) => {
     if (err) {
       console.log(err)
