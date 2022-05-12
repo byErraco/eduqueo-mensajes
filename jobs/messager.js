@@ -67,7 +67,7 @@ const updateRecord = async (id, fields) => {
           console.log(err)
         } else {
           var interval = 1;
-          var intervaltwo = 60000; 
+          var intervaltwo = 120000; 
           let toSend = []
           var promise = Promise.resolve();
           data.forEach(function (value) {
@@ -114,7 +114,11 @@ const updateRecord = async (id, fields) => {
           promise.then(function () {
             console.log('Loop finished Now send msgs.');
             console.log(toSend.length)
-         
+            if(toSend.length > 30) {
+              toSend = toSend.slice(0, 30);
+              console.log('hay mas de 30 contactos para contactar')
+              console.log(`ahora seran ${toSend.length}`)
+            }
             var promiseTwo = Promise.resolve();
             toSend.forEach(function (contact) {
               promiseTwo = promiseTwo.then(function () {

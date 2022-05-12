@@ -197,11 +197,20 @@ exports.saveMsg = async (req, res) => {
       //   });
       //   return
       // }
-      const regexExp = /(\u00a9|\u00ae|[\u2000-\u3300]|\ud83c[\ud000-\udfff]|\ud83d[\ud000-\udfff]|\ud83e[\ud000-\udfff])/gi;
+
+      const regexExp = /\p{Emoji}/u;
+      // const regexExp = /(\u00a9|\u00ae|[\u2000-\u3300]|\ud83c[\ud000-\udfff]|\ud83d[\ud000-\udfff]|\ud83e[\ud000-\udfff])/gi;
       if (regexExp.test(nombre_contacto)) {
         console.log("No se aceptan contactos con emojis!")
         res.status(400).send({
           message: "No se aceptan contactos con emojis!"
+        });
+        return
+      }
+      if (regexExp.test(req.body.mensaje)) {
+        console.log("No se aceptan mensajes con emojis!")
+        res.status(400).send({
+          message: "No se aceptan mensajes con emojis!"
         });
         return
       }
