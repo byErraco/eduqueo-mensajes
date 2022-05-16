@@ -35,6 +35,7 @@ const createRecord = async (fields) => {
     console.log('Getting all msgs')
     var phoneOneArr = []
     var phoneTwoArr = []
+    var phoneThreeArr = []
     // var msgHours = []
     // var msgChar = ''
 
@@ -47,9 +48,10 @@ const createRecord = async (fields) => {
         for (let msgData of data) {
           if(msgData.id_celular == 1) phoneOneArr.push(msgData)
           if(msgData.id_celular == 2) phoneTwoArr.push(msgData)
+          if(msgData.id_celular == 3) phoneThreeArr.push(msgData)
         }
         var metrics = []
-        metrics.push(phoneOneArr,phoneTwoArr);
+        metrics.push(phoneOneArr,phoneTwoArr,phoneThreeArr);
 
         function createMetrics(metric) {
           return new Promise((resolve, reject) => {

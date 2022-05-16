@@ -280,7 +280,6 @@ exports.saveMsg = async (req, res) => {
             Sesion.getMsgById(contact[0].id, async (err, dataMsg) => {
               if (err) {
                 console.log(err)
-                resolve()
               } else {
             
                 var lastMsg = dataMsg[dataMsg.length - 1]
