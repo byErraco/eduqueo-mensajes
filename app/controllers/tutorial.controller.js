@@ -181,32 +181,32 @@ exports.saveMsg = async (req, res) => {
     if (err) {
       console.log(err)
     } else {
-      console.log(filtros)
       for (const filtro of filtros) {
         if (nombre_contacto.includes(filtro.nombre)) {
-          console.log(`${filtro.nombre} no aceptado!`)
+          console.log(`${filtro.nombre} NO ACEPTADO!`)
         res.status(400).send({
-          message: `${filtro.nombre} no aceptado!`
+          message: `${filtro.nombre} NO ACEPTADO!`
         });
         return
         }
       }  
   
-      const regexExp = /\p{Emoji}/u;
-      if (regexExp.test(nombre_contacto)) {
-        console.log("No se aceptan contactos con emojis!")
-        res.status(400).send({
-          message: "No se aceptan contactos con emojis!"
-        });
-        return
-      }
-      if (regexExp.test(req.body.mensaje)) {
-        console.log("No se aceptan mensajes con emojis!")
-        res.status(400).send({
-          message: "No se aceptan mensajes con emojis!"
-        });
-        return
-      }
+      // const regexExp = /[\p{Emoji}\u200d]+/gu;
+      // const regexExp = /\p{Emoji}/u;
+      // if (regexExp.test(nombre_contacto)) {
+      //   console.log("No se aceptan contactos con emojis!")
+      //   res.status(400).send({
+      //     message: "No se aceptan contactos con emojis!"
+      //   });
+      //   return
+      // }
+      // if (regexExp.test(req.body.mensaje)) {
+      //   console.log("No se aceptan mensajes con emojis!")
+      //   res.status(400).send({
+      //     message: "No se aceptan mensajes con emojis!"
+      //   });
+      //   return
+      // }
       console.log(req.body)
 
       var now = new Date();
@@ -254,8 +254,8 @@ exports.saveMsg = async (req, res) => {
               });
             else {
               console.log('Nuevo contacto!')
-              console.log(contactoCreado)
-              console.log('Saving mensaje!')
+              // console.log(contactoCreado)
+              // console.log('Saving mensaje!')
               const newMsg = {
                 id_celular: req.body.asesor_id,
                 mensaje: req.body.mensaje,
@@ -269,8 +269,8 @@ exports.saveMsg = async (req, res) => {
                       err.message || "Some error occurred while saving the msg."
                   });
                 else {
-                  console.log('Nuevo Msg!')
-                  console.log(mensajeCreado)
+                  console.log('Nuevo Msg Guardado!')
+                  // console.log(mensajeCreado)
                   res.send('Mensaje Creado!')
                 }
               });
@@ -322,7 +322,6 @@ exports.saveMsg = async (req, res) => {
                     });
                   else {
                     console.log('Contacto updateado!')
-                    console.log('Saving mensaje!')
                     const newMsg = {
                       id_celular: req.body.asesor_id,
                       mensaje: req.body.mensaje,
@@ -336,8 +335,7 @@ exports.saveMsg = async (req, res) => {
                             err.message || "Some error occurred while saving the msg."
                         });
                       else {
-                        console.log('Nuevo Msg!')
-                        console.log(mensajeCreado)
+                        console.log('Mensaje guardado!')
                         res.send('Mensaje Creado!')
                       }
                     });

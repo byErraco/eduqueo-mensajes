@@ -131,8 +131,8 @@ const updateRecord = async (id, fields) => {
                   if(contact.asesor_id === 1) {
                     //ambrosia
                     console.log('ambrosia')
-                    apiKey = '169ab9e615844a4a8eb568684e679243'
-                    deviceId = 'dc870804ed09496bb86ec9c7be6dc3ff'
+                    apiKey = 'a66107c81d1b4e51a6ecd7efc7bdeb1e'
+                    deviceId = '7251893c89734549ad2c0daabb71acbb'
                   }
                   if(contact.asesor_id === 2) {
                     //benedicto
@@ -202,8 +202,8 @@ const updateRecord = async (id, fields) => {
                   if(contact.asesor_id === 1) {
                     //ambrosia
                     console.log('ambrosia')
-                    apiKey = '169ab9e615844a4a8eb568684e679243'
-                    deviceId = 'dc870804ed09496bb86ec9c7be6dc3ff'
+                    apiKey = 'a66107c81d1b4e51a6ecd7efc7bdeb1e'
+                    deviceId = '7251893c89734549ad2c0daabb71acbb'
                   }
                   
                   if(contact.asesor_id === 2) {
