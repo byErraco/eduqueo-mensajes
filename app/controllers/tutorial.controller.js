@@ -86,8 +86,8 @@ exports.airtableMensajes = async (req,res) => {
       if(cliente.asesorId === "1") {
         //ambrosia
         console.log('ambrosia')
-        apiKey = '169ab9e615844a4a8eb568684e679243'
-        deviceId = 'dc870804ed09496bb86ec9c7be6dc3ff'
+        apiKey = 'a66107c81d1b4e51a6ecd7efc7bdeb1e'
+        deviceId = '7251893c89734549ad2c0daabb71acbb'
       }
       
       if(cliente.asesorId === "2") {
@@ -191,16 +191,8 @@ exports.saveMsg = async (req, res) => {
         return
         }
       }  
-      // if (nombre_contacto.includes('Equipo Eduqueo')) {
-      //   console.log( "Equipo eduqueo no aceptado!")
-      //   res.status(400).send({
-      //     message: "Equipo eduqueo no aceptado!"
-      //   });
-      //   return
-      // }
-
+  
       const regexExp = /\p{Emoji}/u;
-      // const regexExp = /(\u00a9|\u00ae|[\u2000-\u3300]|\ud83c[\ud000-\udfff]|\ud83d[\ud000-\udfff]|\ud83e[\ud000-\udfff])/gi;
       if (regexExp.test(nombre_contacto)) {
         console.log("No se aceptan contactos con emojis!")
         res.status(400).send({
@@ -285,43 +277,70 @@ exports.saveMsg = async (req, res) => {
             }
           });
           } else {
-            var es_cliente 
-            if(nombre_contacto.startsWith("AA")) {
-              es_cliente = true
-            } else {
-              es_cliente = false
-            }
-            const updateContacto = new Sesion({
-              fecha_ultima_interaccion: utc,
-              cantidad_interacciones: 1,
-              es_cliente: es_cliente,
-            });
-            //update contact in the db (amount of interactions and last date of interaction)
-            Sesion.updateContactInteraction(contact[0].id,updateContacto, async (err, contactoUpdateado) => {
-              if (err)
-                res.status(500).send({
-                  message:
-                    err.message || "Some error occurred while updating the contact."
+            Sesion.getMsgById(contact[0].id, async (err, dataMsg) => {
+              if (err) {
+                console.log(err)
+                resolve()
+              } else {
+            
+                var lastMsg = dataMsg[dataMsg.length - 1]
+                var dateToCheck = lastMsg.fecha
+                var msgToCheck = lastMsg.mensaje
+                var actualDate = resultUTCtoArg
+
+                var isSameDay = (dateToCheck.getDate() === actualDate.getDate() 
+                && dateToCheck.getMonth() === actualDate.getMonth()
+                && dateToCheck.getFullYear() === actualDate.getFullYear())
+
+                if(isSameDay) {
+                  if(msgToCheck === req.body.mensaje) {
+                  console.log(`${req.body.mensaje} mensaje duplicado!`)
+                  res.status(400).send({
+                    message: `Mensaje duplicado`
+                  });
+                  return
+                  }
+                }
+
+                var es_cliente 
+                if(nombre_contacto.startsWith("AA")) {
+                  es_cliente = true
+                } else {
+                  es_cliente = false
+                }
+                const updateContacto = new Sesion({
+                  fecha_ultima_interaccion: utc,
+                  cantidad_interacciones: 1,
+                  es_cliente: es_cliente,
                 });
-              else {
-                console.log('Contacto updateado!')
-                console.log('Saving mensaje!')
-                const newMsg = {
-                  id_celular: req.body.asesor_id,
-                  mensaje: req.body.mensaje,
-                  id_contacto: contact[0].id,
-                  fecha:resultUTCtoArg
-                };
-                Sesion.createMensaje(newMsg, async (err, mensajeCreado) => {
+                //update contact in the db (amount of interactions and last date of interaction)
+                Sesion.updateContactInteraction(contact[0].id,updateContacto, async (err, contactoUpdateado) => {
                   if (err)
                     res.status(500).send({
                       message:
-                        err.message || "Some error occurred while saving the msg."
+                        err.message || "Some error occurred while updating the contact."
                     });
                   else {
-                    console.log('Nuevo Msg!')
-                    console.log(mensajeCreado)
-                    res.send('Mensaje Creado!')
+                    console.log('Contacto updateado!')
+                    console.log('Saving mensaje!')
+                    const newMsg = {
+                      id_celular: req.body.asesor_id,
+                      mensaje: req.body.mensaje,
+                      id_contacto: contact[0].id,
+                      fecha:resultUTCtoArg
+                    };
+                    Sesion.createMensaje(newMsg, async (err, mensajeCreado) => {
+                      if (err)
+                        res.status(500).send({
+                          message:
+                            err.message || "Some error occurred while saving the msg."
+                        });
+                      else {
+                        console.log('Nuevo Msg!')
+                        console.log(mensajeCreado)
+                        res.send('Mensaje Creado!')
+                      }
+                    });
                   }
                 });
               }
