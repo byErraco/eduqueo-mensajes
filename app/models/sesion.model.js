@@ -216,7 +216,8 @@ Sesion.updateContactInteractionByNameNoType = (name, date, result) => {
   sql.query(
     `UPDATE contactos SET fecha_ultimo_mensaje_masivo_enviado = ?, cantidad_interacciones = cantidad_interacciones + ? WHERE nombre = ?`,
     // `UPDATE contactos SET fecha_ultima_interaccion = ?,fecha_ultimo_mensaje_masivo_enviado = ?, cantidad_interacciones = cantidad_interacciones + ? WHERE nombre = ?`,
-    [date, 1,1,name],
+    [date, 1,name],
+    // [date, 1,1,name],
     // [date,date, 1,name],
     (err, resData) => {
       if (err) {
