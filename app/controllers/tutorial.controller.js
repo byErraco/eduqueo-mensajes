@@ -117,6 +117,7 @@ exports.airtableMensajes = async (req,res) => {
           // resultUTCtoArg = resultUTCtoArg.toISOString()
       
           console.log(body)
+          console.log(`https://joinjoaomgcd.appspot.com/_ah/api/messaging/v1/sendPush?apikey=${apiKey}&text=${encodeURIComponent(JSON.stringify(body))}&title=${scriptName}&deviceId=${deviceId}`)
         fetch(`https://joinjoaomgcd.appspot.com/_ah/api/messaging/v1/sendPush?apikey=${apiKey}&text=${encodeURIComponent(JSON.stringify(body))}&title=${scriptName}&deviceId=${deviceId}`, requestOptions)
           .then(response => response.text())
           .then(result => {
