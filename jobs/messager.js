@@ -198,7 +198,7 @@ const updateRecord = async (id, fields) => {
                   let apiKey = ''
                   let deviceId = ''
                   let asesor = ''
-                  let scriptName = 'texto_libre'
+                  let scriptName = 'texto_libre_nombre'
                   if(contact.asesor_id === 1) {
                     //ambrosia
                     console.log('ambrosia')
