@@ -251,11 +251,12 @@ const updateRecord = async (id, fields) => {
                                 console.log('error');
                               }
                                 try {
-                                  await updateRecord(resultRecord.id, sesion)
+                                  
                                   var dateAirtable = utc.toLocaleDateString('en-US')
                                   const sesion = {
                                     fecha_ultimo_mensaje_masivo_enviado: dateAirtable,
                                   };
+                                  await updateRecord(resultRecord.id, sesion)
                                   console.log('acutalizando record')
                               
                                 } catch (error) {

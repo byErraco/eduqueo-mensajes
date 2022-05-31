@@ -177,7 +177,7 @@ exports.saveMsg = async (req, res) => {
     return
   }
   const {nombre_contacto} = req.body
-  console.log(nombre_contacto)
+  // console.log(nombre_contacto)
   Sesion.getAllFiltros(async (err, filtros) => {
     if (err) {
       console.log(err)
@@ -208,7 +208,7 @@ exports.saveMsg = async (req, res) => {
       //   });
       //   return
       // }
-      console.log(req.body)
+      // console.log(req.body)
 
       var now = new Date();
       var utc = new Date(now.getTime() + now.getTimezoneOffset() * 60000);
@@ -254,7 +254,7 @@ exports.saveMsg = async (req, res) => {
                   err.message || "Some error occurred while creating the contact."
               });
             else {
-              console.log('Nuevo contacto!')
+              // console.log('Nuevo contacto!')
               // console.log(contactoCreado)
               // console.log('Saving mensaje!')
               const newMsg = {
@@ -270,7 +270,7 @@ exports.saveMsg = async (req, res) => {
                       err.message || "Some error occurred while saving the msg."
                   });
                 else {
-                  console.log('Nuevo Msg Guardado!')
+                  // console.log('Nuevo Msg Guardado!')
                   // console.log(mensajeCreado)
                   res.send('Mensaje Creado!')
                 }
@@ -294,7 +294,7 @@ exports.saveMsg = async (req, res) => {
 
                 if(isSameDay) {
                   if(msgToCheck === req.body.mensaje) {
-                  console.log(`${req.body.mensaje} mensaje duplicado!`)
+                  // console.log(`${req.body.mensaje} mensaje duplicado!`)
                   res.status(400).send({
                     message: `Mensaje duplicado`
                   });
@@ -321,7 +321,7 @@ exports.saveMsg = async (req, res) => {
                         err.message || "Some error occurred while updating the contact."
                     });
                   else {
-                    console.log('Contacto updateado!')
+                    // console.log('Contacto updateado!')
                     const newMsg = {
                       id_celular: req.body.asesor_id,
                       mensaje: req.body.mensaje,
@@ -335,7 +335,7 @@ exports.saveMsg = async (req, res) => {
                             err.message || "Some error occurred while saving the msg."
                         });
                       else {
-                        console.log('Mensaje guardado!')
+                        // console.log('Mensaje guardado!')
                         res.send('Mensaje Creado!')
                       }
                     });
