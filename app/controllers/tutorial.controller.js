@@ -183,7 +183,7 @@ exports.saveMsg = async (req, res) => {
       console.log(err)
     } else {
       for (const filtro of filtros) {
-        if (nombre_contacto.includes(filtro.nombre)) {
+        if (nombre_contacto.toLowerCase().includes(filtro.nombre.toLowerCase())) {
           console.log(`${filtro.nombre} NO ACEPTADO!`)
         res.status(400).send({
           message: `${filtro.nombre} NO ACEPTADO!`
