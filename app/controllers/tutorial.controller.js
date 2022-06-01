@@ -166,8 +166,75 @@ exports.airtableMensajes = async (req,res) => {
   res.status(200).send('Recibido')
 }
 
-// Crear y guardar nueva sesion
+
+// Crear y guardar nuevos contactos
 //revisar si se puede cambiar el campo en airtable a q sea date y no string
+exports.agregarContacto = async (req, res) => {
+
+  const arrContactos = req.body.arrContactos
+  
+  function createNewContact(obj) {
+    return new Promise((resolve, reject) => {
+
+      Sesion.getContactByName(obj.nombre_contacto, async (err, contact) => {
+        if (err) {
+          console.log(err)
+          resolve()
+        }
+        if(contact == 'no existe') {
+          var es_cliente 
+          if(nombre_contacto.startsWith("AA")) {
+            es_cliente = true
+          } else {
+            es_cliente = false
+          }
+          const nuevoContacto = new Sesion({
+            fecha_primera_interaccion: obj.fecha_primera_interaccion,
+            fecha_ultima_interaccion: ob.fecha_ultima_interaccion ? obj.fecha_ultima_interaccion : obj.fecha_primera_interaccion,
+            fecha_ultimo_mensaje_masivo_enviado: null,
+            nombre: obj.nombre_contacto,
+            es_cliente: es_cliente,
+            cantidad_interacciones: 1,
+            asesor_id: obj.asesor_id
+          });
+            // Save Contact in the database
+          Sesion.createContact(nuevoContacto, async (err, contactoCreado) => {
+            if (err)
+              res.status(500).send({
+                message:
+                  err.message || "Some error occurred while creating the contact."
+              });
+            else {
+              console.log('Nuevo contacto!')
+              resolve()
+            }
+          });
+      
+          } else {
+            console.log('existe')
+            resolve()
+          } 
+        });
+
+    });
+  }
+
+  let promiseArr = [];
+  arrContactos.forEach(obj => promiseArr.push(createNewContact(obj)));
+  Promise.all(promiseArr)
+    .then((res) => {
+      console.log('Listo aqui')
+      res.status(200).send('Recibido')
+    })
+    .catch(err => console.log(res))
+
+
+
+};
+
+
+
+
 exports.saveMsg = async (req, res) => {
   // Validate request
   if (!req.body) {
