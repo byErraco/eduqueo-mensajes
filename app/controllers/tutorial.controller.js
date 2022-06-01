@@ -173,7 +173,6 @@ exports.agregarContacto = async (req, res) => {
 
   const arrContactos = req.body.arrContactos
 
-  console.log(arrContactos)
   res.status(200).send('Recibido')
   
   function createNewContact(obj) {
@@ -218,7 +217,8 @@ exports.agregarContacto = async (req, res) => {
           });
       
           } else {
-            console.log('existe')
+
+            console.log(`${obj.nombre_contacto} ya se encuentra en la base de datos`)
             resolve()
           } 
         });
