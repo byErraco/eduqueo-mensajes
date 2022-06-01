@@ -172,6 +172,8 @@ exports.airtableMensajes = async (req,res) => {
 exports.agregarContacto = async (req, res) => {
 
   const arrContactos = req.body.arrContactos
+
+  console.log(arrContactos)
   
   function createNewContact(obj) {
     return new Promise((resolve, reject) => {
@@ -190,7 +192,7 @@ exports.agregarContacto = async (req, res) => {
           }
           const nuevoContacto = new Sesion({
             fecha_primera_interaccion: obj.fecha_primera_interaccion,
-            fecha_ultima_interaccion: ob.fecha_ultima_interaccion ? obj.fecha_ultima_interaccion : obj.fecha_primera_interaccion,
+            fecha_ultima_interaccion: obj.fecha_ultima_interaccion ? obj.fecha_ultima_interaccion : obj.fecha_primera_interaccion,
             fecha_ultimo_mensaje_masivo_enviado: null,
             nombre: obj.nombre_contacto,
             es_cliente: es_cliente,
