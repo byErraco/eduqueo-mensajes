@@ -174,6 +174,7 @@ exports.agregarContacto = async (req, res) => {
   const arrContactos = req.body.arrContactos
 
   console.log(arrContactos)
+  res.status(200).send('Recibido')
   
   function createNewContact(obj) {
     return new Promise((resolve, reject) => {
@@ -230,7 +231,7 @@ exports.agregarContacto = async (req, res) => {
   Promise.all(promiseArr)
     .then((res) => {
       console.log('Listo aqui')
-      res.status(200).send('Recibido')
+      
     })
     .catch(err => console.log(res))
 
