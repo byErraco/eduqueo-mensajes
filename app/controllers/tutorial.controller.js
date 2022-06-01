@@ -190,9 +190,13 @@ exports.agregarContacto = async (req, res) => {
           } else {
             es_cliente = false
           }
+
+    
+          var primeraInt = new Date(obj.fecha_ultima_interaccion);
+          var ultimaInt = new Date(obj.fecha_ultima_interaccion);
           const nuevoContacto = new Sesion({
-            fecha_primera_interaccion: obj.fecha_primera_interaccion,
-            fecha_ultima_interaccion: obj.fecha_ultima_interaccion ? obj.fecha_ultima_interaccion : obj.fecha_primera_interaccion,
+            fecha_primera_interaccion: primeraInt,
+            fecha_ultima_interaccion: obj.fecha_ultima_interaccion ? ultimaInt : primeraInt,
             fecha_ultimo_mensaje_masivo_enviado: null,
             nombre: obj.nombre_contacto,
             es_cliente: es_cliente,
