@@ -183,7 +183,7 @@ exports.agregarContacto = async (req, res) => {
         }
         if(contact == 'no existe') {
           var es_cliente 
-          if(nombre_contacto.startsWith("AA")) {
+          if(obj.nombre_contacto.startsWith("AA")) {
             es_cliente = true
           } else {
             es_cliente = false
