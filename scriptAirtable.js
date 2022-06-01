@@ -13,6 +13,7 @@ for (let record of query.records) {
         esCliente:record.getCellValueAsString("cliente"),
         enBlacklist:record.getCellValueAsString("blacklist"),
         texto:record.getCellValueAsString("texto"),
+        rowId: record.id,
     }
     clientesArr.push(clienteData)
 }
@@ -44,7 +45,8 @@ if(isError === true) {
             "arr": enviarArr,
             // "mensaje": mensaje,
         }
-    console.log(body)
+
+
     let response = await remoteFetchAsync('https://eduqueo-tasker-node-api.herokuapp.com/api/hormigas/airtable-mensajes', {
         method: 'POST',
         body: JSON.stringify(body),
@@ -53,9 +55,19 @@ if(isError === true) {
             "Accept": "application/json",
         }, 
     });
-    if(response) console.log('Contactos enviados a tasker!')
+    if(response) {
+      output.markdown('# Contactos enviados a tasker!');
+      for (let index of enviarArr) {
+          let row = index.rowId;
+          await table.updateRecordAsync(row, {
+          "para_enviar" : false,
+          })
+        }
+    } 
+
   }
 }
+
 
 
 //acutalizar filtros api
@@ -87,6 +99,10 @@ let response = await remoteFetchAsync('https://eduqueo-tasker-node-api.herokuapp
 });
 
 console.log('Filtros guardados exitosamente')
+
+  
+
+
 
   
 
