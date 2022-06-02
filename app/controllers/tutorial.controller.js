@@ -192,7 +192,7 @@ exports.agregarContacto = async (req, res) => {
           }
 
     
-          var primeraInt = new Date(obj.fecha_ultima_interaccion);
+          var primeraInt = new Date(obj.fecha_primera_interaccion);
           var ultimaInt = new Date(obj.fecha_ultima_interaccion);
           const nuevoContacto = new Sesion({
             fecha_primera_interaccion: primeraInt,
@@ -212,6 +212,39 @@ exports.agregarContacto = async (req, res) => {
               });
             else {
               console.log('Nuevo contacto!')
+              console.log('Airtable!')
+              let sesion = {
+                nombre_unico: `${obj.nombre_contacto}`,
+                asesor_id: obj.asesor_id,
+                contacto_inicio: obj.fecha_primera_interaccion,
+                ultimo_mensaje_recibido: obj.fecha_ultima_interaccion,
+                // fecha_ultimo_mensaje_masivo_enviado: obj.fecha_ultimo_mensaje_masivo_enviado.toLocaleDateString('en-US'),
+                cantidad_interacciones: 1,
+                cliente: es_cliente
+              }
+              getRecordByField(obj.nombre_contacto, async (err,resultRecord) => {
+                if(err){
+                  // console.log(err)
+                  console.log('error')
+                }
+                if(resultRecord) {
+                    try {
+                      await updateRecord(resultRecord.id, sesion)
+                    resolve()
+                    } catch (error) {
+                      console.log(error)
+                      
+                    }
+                } else {
+                    try {
+                      await createRecord(sesion)
+                      resolve()
+                    } catch (error) {
+                      console.log(error)
+                    }
+                }
+              }) 
+              
               resolve()
             }
           });
