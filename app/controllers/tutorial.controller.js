@@ -207,6 +207,7 @@ exports.agregarContacto = async (req, res) => {
           Sesion.createContact(nuevoContacto, async (err, contactoCreado) => {
             if (err) {
               console.log( "Some error occurred while creating the contact.")
+              resolve()
             }
 
             else {
