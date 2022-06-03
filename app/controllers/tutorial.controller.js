@@ -213,6 +213,7 @@ exports.agregarContacto = async (req, res) => {
             else {
               console.log('Nuevo contacto!')
               console.log('Airtable!')
+              console.log(isNaN(obj.asesor_id))
               let sesion = {
                 nombre_unico: `${obj.nombre_contacto}`,
                 asesor_id: obj.asesor_id,
@@ -228,13 +229,13 @@ exports.agregarContacto = async (req, res) => {
                   console.log('error')
                 }
                 if(resultRecord) {
-                    try {
-                      await updateRecord(resultRecord.id, sesion)
-                    resolve()
-                    } catch (error) {
-                      console.log(error)
+                    // try {
+                    //   await updateRecord(resultRecord.id, sesion)
+                    // resolve()
+                    // } catch (error) {
+                    //   console.log(error)
                       
-                    }
+                    // }
                 } else {
                     try {
                       await createRecord(sesion)
