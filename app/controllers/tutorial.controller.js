@@ -207,13 +207,14 @@ exports.agregarContacto = async (req, res) => {
           Sesion.createContact(nuevoContacto, async (err, contactoCreado) => {
             if (err) {
               console.log( "Some error occurred while creating the contact.")
+              console.log(err)
               resolve()
             }
 
             else {
-              console.log('Nuevo contacto!')
-              console.log('Airtable!')
-              console.log(isNaN(obj.asesor_id))
+              // console.log('Nuevo contacto!')
+              // console.log('Airtable!')
+              // console.log(isNaN(obj.asesor_id))
               let sesion = {
                 nombre_unico: `${obj.nombre_contacto}`,
                 asesor_id: parseInt(obj.asesor_id),
@@ -252,7 +253,7 @@ exports.agregarContacto = async (req, res) => {
       
           } else {
 
-            console.log(`${obj.nombre_contacto} ya se encuentra en la base de datos`)
+            // console.log(`${obj.nombre_contacto} ya se encuentra en la base de datos`)
             resolve()
           } 
         });
