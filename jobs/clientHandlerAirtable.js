@@ -93,7 +93,7 @@ const getRecordByField = async (field, result) => {
                     ultimo_mensaje_recibido: obj.fecha_ultima_interaccion.toLocaleDateString('en-US'),
                     // ultimo_contacto: obj.fecha_ultima_interaccion,
                     // fecha_ultimo_mensaje_masivo_enviado: obj.fecha_ultimo_mensaje_masivo_enviado,
-                    cantidad_interacciones: dataMsg.length,
+                    cantidad_interacciones: dataMsg.length? dataMsg.length : 1,
                     cliente: es_cliente
                     // cliente: obj.es_cliente == 0 ? false : true
                   };
