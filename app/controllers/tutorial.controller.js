@@ -205,11 +205,10 @@ exports.agregarContacto = async (req, res) => {
           });
             // Save Contact in the database
           Sesion.createContact(nuevoContacto, async (err, contactoCreado) => {
-            if (err)
-              res.status(500).send({
-                message:
-                  err.message || "Some error occurred while creating the contact."
-              });
+            if (err) {
+              console.log( "Some error occurred while creating the contact.")
+            }
+
             else {
               console.log('Nuevo contacto!')
               console.log('Airtable!')
