@@ -218,7 +218,7 @@ exports.agregarContacto = async (req, res) => {
                 nombre_unico: `${obj.nombre_contacto}`,
                 asesor_id: parseInt(obj.asesor_id),
                 contacto_inicio: obj.fecha_primera_interaccion,
-                ultimo_mensaje_recibido: obj.fecha_ultima_interaccion,
+                ultimo_mensaje_recibido: obj.fecha_ultima_interaccion ? obj.fecha_ultima_interaccion : obj.fecha_primera_interaccion ,
                 // fecha_ultimo_mensaje_masivo_enviado: obj.fecha_ultimo_mensaje_masivo_enviado.toLocaleDateString('en-US'),
                 cantidad_interacciones: 1,
                 cliente: es_cliente
