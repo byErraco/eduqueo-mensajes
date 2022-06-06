@@ -132,6 +132,7 @@ exports.airtableMensajes = async (req,res) => {
             Sesion.updateContactInteractionByNameNoType(cliente.clienteNombre,utc, async (err, contactoUpdateado) => {
               if (err) {
                 console.log('Hubo un error actualizando la ultima interaccion')
+                console.log(err)
               } else {
                 console.log('Ultimo contacto actualizado en la base de datos... ahora airtable')
                 getRecordByField(cliente.clienteNombre, async (err,resultRecord) => {
@@ -330,6 +331,7 @@ exports.saveMsg = async (req, res) => {
       const resultUTCtoArg = subtractHours(3);
 
       console.log(`mensaje recibdo hora: ${resultUTCtoArg}`)
+      console.log(req.body)
 
       Sesion.getContactByName(nombre_contacto, async (err, contact) => {
         if (err) {
@@ -387,6 +389,7 @@ exports.saveMsg = async (req, res) => {
             }
           });
           } else {
+            console.log(contact)
             Sesion.getMsgById(contact[0].id, async (err, dataMsg) => {
               if (err) {
                 console.log(err)
