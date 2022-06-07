@@ -58,7 +58,9 @@ Sesion.getMsgById = (id, result) => {
     }
 
     // not found Tutorial with the id
-    result(null, res);
+    result(null, 'no existe');
+    return
+    // result(null, res);
     // result({ kind: "not_found" }, null);
   });
 };

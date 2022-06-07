@@ -394,7 +394,29 @@ exports.saveMsg = async (req, res) => {
               if (err) {
                 console.log(err)
               } else {
-            
+                if(dataMsg == 'no existe') {
+
+                  const newMsg = {
+                    id_celular: req.body.asesor_id,
+                    mensaje: req.body.mensaje,
+                    id_contacto: contact[0].id,
+                    fecha:resultUTCtoArg
+                  };
+                  Sesion.createMensaje(newMsg, async (err, mensajeCreado) => {
+                    if (err)
+                      res.status(500).send({
+                        message:
+                          err.message || "Some error occurred while saving the msg."
+                      });
+                    else {
+                      // console.log('Nuevo Msg Guardado!')
+                      // console.log(mensajeCreado)
+                      res.send('Mensaje Creado!')
+                    }
+                  });
+
+                } else {
+                              
                 var lastMsg = dataMsg[dataMsg.length - 1]
                 var dateToCheck = lastMsg.fecha
                 var msgToCheck = lastMsg.mensaje
@@ -453,6 +475,9 @@ exports.saveMsg = async (req, res) => {
                     });
                   }
                 });
+
+                }
+
               }
             });
           } 
