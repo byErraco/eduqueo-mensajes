@@ -6,6 +6,7 @@ const { parentPort } = require('worker_threads');
 
 
 const Airtable = require('airtable');
+const { resolve } = require("path");
 //prod
 const base = new Airtable({ apiKey: 'keychMsGE74MU7aPW' }).base(
   'appLozC8HlQpY5OGi'
@@ -83,26 +84,32 @@ const updateRecord = async (id, fields) => {
               }
               const resultUTCtoArg = subtractHours(3);
               // var utc = new Date(now.getTime() + now.getTimezoneOffset() * 60000);
-              if(value.segundo_auto_mesaje_masivo_enviado == '0'){
+              if(value.segundo_auto_mesaje_masivo_enviado == '0') {
                 if(value.auto_mensaje_masivo_enviado == '1') {
-                  if(Difference_In_Days >= 60){
+                  if(Difference_In_Days >= 60) {
                     value.type = 'Two'
-                    
                     toSend.push(value)
-      
-                    console.log(Difference_In_Days);
+                    // console.log(Difference_In_Days);
                     console.log('60');
+                    resolve()
+                  } else {
+                    resolve()
                   }
                 } else {
                   if (Difference_In_Days > 30 && Difference_In_Days < 60) {
                     value.type = 'One'
                     toSend.push(value)
-                    console.log(Difference_In_Days);
+                    // console.log(Difference_In_Days);
                     console.log('30');
+                    resolve()
+                  } else {
+                    resolve()
                   }
                 }
-              } else {
-                console.log('No le toca enviar mensaje')
+              } 
+              else {
+                resolve()
+                // console.log('No le toca enviar mensaje')
               }
       
               return new Promise(function (resolve) {
@@ -113,17 +120,19 @@ const updateRecord = async (id, fields) => {
           
           promise.then(function () {
             console.log('Loop finished Now send msgs.');
-            console.log(toSend.length)
             if(toSend.length > 30) {
               toSend = toSend.slice(0, 30);
               console.log('hay mas de 30 contactos para contactar')
               console.log(`ahora seran ${toSend.length}`)
             }
+            console.log(toSend)
             var promiseTwo = Promise.resolve();
             toSend.forEach(function (contact) {
               promiseTwo = promiseTwo.then(function () {
       
                 if(contact.type === 'One') {
+                  // console.log('PRIMERA VEZ')
+                  // console.log(contact)
                   let apiKey = ''
                   let deviceId = ''
                   let scriptName = 'texto_libre_nombre'
@@ -147,58 +156,69 @@ const updateRecord = async (id, fields) => {
                     deviceId = '4d9ad1708664485b84db73930bc444dc'
                   }
                   let body = {
-                          "name": contact.nombre,
-                          "message": mensajeAutomatico,
+                        "name": contact.nombre,
+                        "message": mensajeAutomatico,
                       }
-                      console.log(body)
-                      console.log(apiKey)
-                      console.log(deviceId)
+                  var type = 'auto_mensaje_masivo_enviado'
+
                   var requestOptions = {
                     method: 'POST',
                     redirect: 'follow'
                     };
-                  console.log(body)
-      
+                    console.log(body)
+                    // console.log(apiKey)
+                    // console.log(deviceId)
+                    // console.log(type) 
+                    console.log('Enviando a tasker...')
                     fetch(`https://joinjoaomgcd.appspot.com/_ah/api/messaging/v1/sendPush?apikey=${apiKey}&text=${encodeURIComponent(JSON.stringify(body))}&title=${scriptName}&deviceId=${deviceId}`, requestOptions)
                       .then(response => response.text())
                       .then(result => {
-                        console.log('MENSAJE ENVIADO')
+                        console.log('MENSAJE AUTOMATICO 1 ENVIADO')
                         console.log(result)
-                        var type = 'auto_mensaje_masivo_enviado'
+                        
                         var now = new Date();
                         var utc = new Date(now.getTime() + now.getTimezoneOffset() * 60000);
                         Sesion.updateContactInteractionByName(contact.nombre,utc,type, async (err, contactoUpdateado) => {
                           if (err) {
                             console.log('Hubo un error actualizando la ultima interaccion')
+                            resolve()
                           } else {
                             console.log('Ultimo mensaje masivo actualizado en la base de datos... ahora airtable')
              
                             getRecordByField(contact.nombre, async (err,resultRecord) => {
                               if(err){
                                 // console.log(err)
+                                resolve()
                                 console.log('error')
+                              } else {
+                                try {
+                                  var dateAirtable = utc.toLocaleDateString('en-US')
+                                  const sesion = {
+                                    fecha_ultimo_mensaje_masivo_enviado: dateAirtable,
+                                  };
+                                  await updateRecord(resultRecord.id, sesion)
+                                  console.log('acutalizando record')
+                                  resolve()
+                                } catch (error) {
+                                  console.log(error)
+                                  resolve()
+                                }
                               }
-                              try {
-                                var dateAirtable = utc.toLocaleDateString('en-US')
-                                const sesion = {
-                                  fecha_ultimo_mensaje_masivo_enviado: dateAirtable,
-                                };
-                                await updateRecord(resultRecord.id, sesion)
-                              } catch (error) {
-                                console.log(error)
-                              }
+
                             }) 
                           }
                         })
                       })
                       .catch(error => console.log('error', error));
-                      console.log('Enviando a tasker...')
+                      
                 }
                 if(contact.type === 'Two') {
+                  console.log('SEGUNDA VEZ')
+                  console.log(contact)
                   let apiKey = ''
                   let deviceId = ''
-                  let asesor = ''
                   let scriptName = 'texto_libre_nombre'
+                  // let asesor = ''
                   if(contact.asesor_id === 1) {
                     //ambrosia
                     console.log('ambrosia')
@@ -209,7 +229,7 @@ const updateRecord = async (id, fields) => {
                   if(contact.asesor_id === 2) {
                     //benedicto
                     console.log('benedicto')
-                    asesor = 'benedicto'
+                    // asesor = 'benedicto'
                     apiKey = '169ab9e615844a4a8eb568684e679243'
                     deviceId = 'dc870804ed09496bb86ec9c7be6dc3ff'
                   }
@@ -218,30 +238,34 @@ const updateRecord = async (id, fields) => {
                     console.log('ebano')
                     apiKey = '10896fe04b7143189be93d6a47b85805'
                     deviceId = '4d9ad1708664485b84db73930bc444dc'
-                    asesor = 'ebano'
+                    // asesor = 'ebano'
                   }
                   let body = {
-                          "name": contact.nombre,
-                          "message": mensajeAutomatico,
+                        "name": contact.nombre,
+                        "message": mensajeAutomatico,
                       }
-                      console.log(body)
-                      console.log(asesor)
+                  var type = 'segundo_auto_mesaje_masivo_enviado'
 
                   var requestOptions = {
                     method: 'POST',
                     redirect: 'follow'
                     };
-                  console.log(body)    
+                    console.log(body)
+                    // console.log(apiKey)
+                    // console.log(deviceId) 
+                    // console.log(type) 
+                    console.log('Enviando a tasker...')
                     fetch(`https://joinjoaomgcd.appspot.com/_ah/api/messaging/v1/sendPush?apikey=${apiKey}&text=${encodeURIComponent(JSON.stringify(body))}&title=${scriptName}&deviceId=${deviceId}`, requestOptions)
                       .then(response => response.text())
                       .then(result => {
-                        console.log('MENSAJE ENVIADO')
+                        console.log('MENSAJE AUTOMATICO 2 ENVIADO')
                         console.log(result)
-                        var type = 'segundo_auto_mesaje_masivo_enviado'
+                        
                         var now = new Date();
                         var utc = new Date(now.getTime() + now.getTimezoneOffset() * 60000);
                         Sesion.updateContactInteractionByName(contact.nombre,utc,type, async (err, contactoUpdateado) => {
                           if (err) {
+                            resolve()
                             console.log('Hubo un error actualizando la ultima interaccion')
                           } else {
                             console.log('Ultimo mensaje masivo actualizado en la base de datos... ahora airtable')
@@ -249,7 +273,8 @@ const updateRecord = async (id, fields) => {
                             getRecordByField(contact.nombre, async (err,resultRecord) => {
                               if(err){
                                 console.log('error');
-                              }
+                                resolve()
+                              } else {
                                 try {
                                   
                                   var dateAirtable = utc.toLocaleDateString('en-US')
@@ -258,17 +283,20 @@ const updateRecord = async (id, fields) => {
                                   };
                                   await updateRecord(resultRecord.id, sesion)
                                   console.log('acutalizando record')
-                              
+                                  resolve()
                                 } catch (error) {
                                   console.log(error)
+                                  resolve()
                                 }
-                                console.log('sesion actualizada')
+                              }
+
+                                
                             }) 
                           }
                         })
                       })
                       .catch(error => console.log('error', error));
-                      console.log('Enviando a tasker...')
+                      
                 }
                 return new Promise(function (resolve) {
                   setTimeout(resolve, intervaltwo);

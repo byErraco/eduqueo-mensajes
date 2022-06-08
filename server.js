@@ -52,6 +52,7 @@ const bree = new Bree({
     },
     {
       name : 'clientHandlerAirtable', // create sesion info for clients in airtable
+      // interval: '60s'
       cron : '*/20 12-20 * * *' //run the script after 30 seconds from the start
     }
   ]
