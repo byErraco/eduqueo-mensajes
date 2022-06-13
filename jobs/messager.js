@@ -73,44 +73,50 @@ const updateRecord = async (id, fields) => {
           var promise = Promise.resolve();
           data.forEach(function (value) {
             promise = promise.then(function () {
-             
-              var Difference_In_Time = present_date.getTime() - value.fecha_ultima_interaccion.getTime();
-              var Difference_In_Days = Difference_In_Time / (1000 * 3600 * 24);
-        
-              function subtractHours(numOfHours, date = new Date()) {
-                date.setHours(date.getHours() - numOfHours);
-              
-                return date;
-              }
-              const resultUTCtoArg = subtractHours(3);
-              // var utc = new Date(now.getTime() + now.getTimezoneOffset() * 60000);
-              if(value.segundo_auto_mesaje_masivo_enviado == '0') {
-                if(value.auto_mensaje_masivo_enviado == '1') {
-                  if(Difference_In_Days >= 60) {
-                    value.type = 'Two'
-                    toSend.push(value)
-                    // console.log(Difference_In_Days);
-                    console.log('60');
-                    resolve()
-                  } else {
-                    resolve()
-                  }
-                } else {
-                  if (Difference_In_Days > 30 && Difference_In_Days < 60) {
-                    value.type = 'One'
-                    toSend.push(value)
-                    // console.log(Difference_In_Days);
-                    console.log('30');
-                    resolve()
-                  } else {
-                    resolve()
-                  }
-                }
-              } 
-              else {
+
+              if(value.nombre_contacto.startsWith("AA")) {
                 resolve()
-                // console.log('No le toca enviar mensaje')
+              } else {
+                var Difference_In_Time = present_date.getTime() - value.fecha_ultima_interaccion.getTime();
+                var Difference_In_Days = Difference_In_Time / (1000 * 3600 * 24);
+          
+                function subtractHours(numOfHours, date = new Date()) {
+                  date.setHours(date.getHours() - numOfHours);
+                
+                  return date;
+                }
+                const resultUTCtoArg = subtractHours(3);
+                // var utc = new Date(now.getTime() + now.getTimezoneOffset() * 60000);
+                if(value.segundo_auto_mesaje_masivo_enviado == '0') {
+                  if(value.auto_mensaje_masivo_enviado == '1') {
+                    if(Difference_In_Days >= 60) {
+                      value.type = 'Two'
+                      toSend.push(value)
+                      // console.log(Difference_In_Days);
+                      console.log('60');
+                      resolve()
+                    } else {
+                      resolve()
+                    }
+                  } else {
+                    if (Difference_In_Days > 30 && Difference_In_Days < 60) {
+                      value.type = 'One'
+                      toSend.push(value)
+                      // console.log(Difference_In_Days);
+                      console.log('30');
+                      resolve()
+                    } else {
+                      resolve()
+                    }
+                  }
+                } 
+                else {
+                  resolve()
+                  // console.log('No le toca enviar mensaje')
+                }
               }
+             
+
       
               return new Promise(function (resolve) {
                 setTimeout(resolve, interval);

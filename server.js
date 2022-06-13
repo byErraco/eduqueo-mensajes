@@ -42,7 +42,7 @@ const bree = new Bree({
     // // runs the job on Start
     {
       name : 'metrics', //create metrics for the database in airtable
-      cron : '0 11 * * 1'
+      cron : '0 15 * * 1'
       // interval: 'at 2:40 pm on the first day of the week'
       // interval: 'at 2:31 pm on Monday'
     },
