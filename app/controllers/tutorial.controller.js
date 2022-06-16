@@ -125,6 +125,14 @@ exports.airtableMensajes = async (req,res) => {
             console.log(result)
             var now = new Date();
             var utc = new Date(now.getTime() + now.getTimezoneOffset() * 60000);
+
+            function subtractHours(numOfHours, date = new Date()) {
+              date.setHours(date.getHours() - numOfHours);
+            
+              return date;
+            }
+            const resultUTCtoArg = subtractHours(3);
+
             // console.log(`Mensaje enviado aprox a las ${resultUTCtoArg}`)
             var dateAirtable = utc.toLocaleDateString('en-US')
             //update contact in the db (amount of interactions and last date of interaction)
@@ -140,7 +148,8 @@ exports.airtableMensajes = async (req,res) => {
                     console.log('error')
                   }
                     const sesion = {
-                      fecha_ultimo_mensaje_masivo_enviado: dateAirtable,
+                      fecha_ultimo_mensaje_masivo_enviado: resultUTCtoArg,
+                      // fecha_ultimo_mensaje_masivo_enviado: dateAirtable,
                       
                       // fecha_ultimo_mensaje_masivo_enviado: now,
                       // fecha_ultimo_mensaje_masivo_enviado: utc,
